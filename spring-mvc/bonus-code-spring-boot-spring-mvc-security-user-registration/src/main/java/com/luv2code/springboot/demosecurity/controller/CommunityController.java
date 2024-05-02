@@ -7,10 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,8 +28,8 @@ public class CommunityController {
         return "community/create-community-form";
     }
 
-    @GetMapping("/showCommunity")
-    public String showCommunityForm(Model theModel){
+    @GetMapping("/showCreatedCommunities")
+    public String showCreatedCommunities(Model theModel){
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         String username=authentication.getName();
         List<Community> communities=communityDao.getCommunitiesByUserName(username);
@@ -40,16 +37,39 @@ public class CommunityController {
         return "community/show-created-communities";
     }
 
+    @GetMapping("/showAllCommunities")
+    public String showAllCommunities(Model theModel){
+
+        List<Community> communities=communityDao.getAllCommunities();
+        theModel.addAttribute("communities", communities);
+        return "community/show-created-communities";
+    }
+
+    @GetMapping("/showCommunity")
+    public String showCommunity(@RequestParam("communityId") int theId,Model theModel){
+        Community community=communityDao.getCommunityById(theId);
+        theModel.addAttribute("community", community);
+        return "community/community-page";
+    }
+
     @PostMapping("/processCommunity")
     public String saveCommunity(@Valid @ModelAttribute("community") Community theCommunity){
         String name=theCommunity.getName();
         Community community =communityDao.findByName(name);
         System.out.println(name);
-        if(community!=null){
-            return "community/creation-denied";
-        }
+
         communityDao.save(theCommunity);
-        return "community/creation-confirm";
+        return "community/community-page";
+    }
+
+    @GetMapping("/followCommunity")
+    public String followCommunity(@RequestParam("communityId") int theId,Model theModel){
+
+        communityDao.followCommunityById(theId);
+
+        Community community=communityDao.getCommunityById(theId);
+        theModel.addAttribute("community", community);
+        return "community/community-page";
     }
 
 }

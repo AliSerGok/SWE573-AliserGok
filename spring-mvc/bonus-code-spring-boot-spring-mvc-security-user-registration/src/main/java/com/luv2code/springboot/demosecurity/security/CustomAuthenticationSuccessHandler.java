@@ -39,6 +39,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         HttpSession session = request.getSession();
         session.setAttribute("user", theUser);
 
+
         // forward to home page
         response.sendRedirect(request.getContextPath() + "/");
     }

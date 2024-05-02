@@ -66,4 +66,29 @@ public class CommunityDaoImpl implements CommunityDao{
 
         return theCommunities;
     }
+
+    @Override
+    public List<Community> getAllCommunities() {
+        TypedQuery<Community> theQuery = entityManager.createQuery("Select c from Community c", Community.class);
+
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public Community getCommunityById(int id) {
+
+        return entityManager.find(Community.class,id);
+    }
+
+    @Override
+    @Transactional
+    public void followCommunityById(int id) {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String userName=authentication.getName();
+        User user = userDao.findByUserName(userName);
+
+        Community community=entityManager.find(Community.class,id);
+        community.addFollower(user);
+        entityManager.merge(community);
+    }
 }

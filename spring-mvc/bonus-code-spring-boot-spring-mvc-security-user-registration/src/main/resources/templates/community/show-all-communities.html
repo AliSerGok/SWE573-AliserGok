@@ -3,10 +3,10 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
-  <title>Communities page</title>
+  <title>Communities</title>
 </head>
 <body>
-<h2>Communities you own</h2>
+<h2>Spiny Communities</h2>
 Authorized name: <span sec:authentication="principal.username"></span><br><br>
 <hr>
 
@@ -33,7 +33,6 @@ Authorized name: <span sec:authentication="principal.username"></span><br><br>
       <th>Description</th>
       <div sec:authorize="hasRole('USER')">
         <th>  View  </th>
-        <th>  Update  </th>
       </div>
 
 
@@ -54,10 +53,11 @@ Authorized name: <span sec:authentication="principal.username"></span><br><br>
       </div>
       </td>
       <td>
+        <!--
         <div sec:authorize="hasRole('USER')">
           <a th:href="@{/community/delete(communityId=${tempCommunity.id})}"
              onclick="if(!(confirm('Are you sure to delete this community'))) return false">Delete</a>
-        </div>
+        </div>-->
       </td>
 
 

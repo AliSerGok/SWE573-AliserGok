@@ -32,8 +32,8 @@ Authorized name: <span sec:authentication="principal.username"></span><br><br>
       <th>Community Name</th>
       <th>Description</th>
       <div sec:authorize="hasRole('USER')">
-        <th>  Action  </th>
-        <th>  Delete  </th>
+        <th>  View  </th>
+        <th>  Update  </th>
       </div>
 
 
@@ -49,13 +49,13 @@ Authorized name: <span sec:authentication="principal.username"></span><br><br>
 
 
       <td><div sec:authorize="hasRole('USER')">
-        <a th:href="@{/community/update(employeeId=${tempCommunity.id})}">Update</a>
+        <a th:href="@{/community/showCommunity(communityId=${tempCommunity.id})}">View</a>
 
       </div>
       </td>
       <td>
         <div sec:authorize="hasRole('USER')">
-          <a th:href="@{/community/delete(tempCommunity=${tempCommunity.id})}"
+          <a th:href="@{/community/delete(communityId=${tempCommunity.id})}"
              onclick="if(!(confirm('Are you sure to delete this community'))) return false">Delete</a>
         </div>
       </td>

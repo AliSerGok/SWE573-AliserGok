@@ -47,6 +47,12 @@ public class User {
     @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     private List<Community> createdCommunity;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(name = "community_followers",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "community_id")
+    )
+    private List<Community> followedCommunities;
     public User() {
     }
 
@@ -69,8 +75,11 @@ public class User {
         this.roles.add(role);
     }
 
-    public void addCreadetCommunity(Community community) {
+    public void addCreatedCommunity(Community community) {
         this.createdCommunity.add(community);
+    }
+    public void addFollowedCommunities(Community community){
+        this.followedCommunities.add(community);
     }
 
 }

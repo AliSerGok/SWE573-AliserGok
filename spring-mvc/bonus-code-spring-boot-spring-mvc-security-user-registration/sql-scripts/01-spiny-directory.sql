@@ -115,6 +115,24 @@ CREATE TABLE `users_roles` (
 
 SET FOREIGN_KEY_CHECKS = 1;
 
+DROP TABLE IF EXISTS `community_followers`;
+
+CREATE TABLE `community_followers` (
+  `community_id` int(11) NOT NULL,
+  `follower_id` int(11) NOT NULL,
+  
+  PRIMARY KEY (`community_id`,`follower_id`),
+  
+  KEY `FK_COMM_idx` (`community_id`),
+  
+  CONSTRAINT `FK_COMM_05` FOREIGN KEY (`community_id`) 
+  REFERENCES `community` (`id`) 
+  ON DELETE NO ACTION ON UPDATE NO ACTION,
+  
+  CONSTRAINT `FK_FOLL` FOREIGN KEY (`follower_id`) 
+  REFERENCES `user` (`id`) 
+  ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 --
 -- Dumping data for table `users_roles`
 --
