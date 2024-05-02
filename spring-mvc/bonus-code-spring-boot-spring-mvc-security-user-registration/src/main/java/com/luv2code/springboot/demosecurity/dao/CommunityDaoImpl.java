@@ -4,21 +4,30 @@ import com.luv2code.springboot.demosecurity.entity.Community;
 import com.luv2code.springboot.demosecurity.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Repository
 public class CommunityDaoImpl implements CommunityDao{
-    EntityManager entityManager;
-
-    public CommunityDaoImpl(EntityManager entityManager) {
+    private EntityManager entityManager;
+    private UserDao userDao;
+    @Autowired
+    public CommunityDaoImpl(EntityManager entityManager, UserDao userDao) {
         this.entityManager = entityManager;
+        this.userDao=userDao;
     }
 
     @Override
     @Transactional
     public void save(Community community) {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String userName=authentication.getName();
+        User user = userDao.findByUserName(userName);
+        community.setOwner(user);
         entityManager.persist(community);
     }
 

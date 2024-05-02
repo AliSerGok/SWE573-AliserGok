@@ -14,10 +14,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class DemoSecurityConfig {
 
     //bcrypt bean definition
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     //authenticationProvider bean definition
     @Bean
