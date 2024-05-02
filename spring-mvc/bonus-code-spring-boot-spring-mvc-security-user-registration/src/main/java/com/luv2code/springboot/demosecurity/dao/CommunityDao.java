@@ -7,4 +7,6 @@ import java.util.List;
 public interface CommunityDao {
     void save(Community community);
     Community findByName(String name);
+
+    List<Community> getCommunitiesByUserName(String name);
 }

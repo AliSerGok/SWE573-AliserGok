@@ -3,6 +3,8 @@ package com.luv2code.springboot.demosecurity.controller;
 import com.luv2code.springboot.demosecurity.dao.CommunityDao;
 import com.luv2code.springboot.demosecurity.entity.Community;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,15 @@ public class CommunityController {
         Community community=new Community();
         theModel.addAttribute("community", community);
         return "community/create-community-form";
+    }
+
+    @GetMapping("/showCommunity")
+    public String showCommunityForm(Model theModel){
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String username=authentication.getName();
+        List<Community> communities=communityDao.getCommunitiesByUserName(username);
+        theModel.addAttribute("communities", communities);
+        return "community/show-created-communities";
     }
 
     @PostMapping("/processCommunity")

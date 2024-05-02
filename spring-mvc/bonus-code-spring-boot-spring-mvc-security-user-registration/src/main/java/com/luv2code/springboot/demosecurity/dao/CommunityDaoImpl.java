@@ -48,4 +48,22 @@ public class CommunityDaoImpl implements CommunityDao{
 
         return theCommunity;
     }
+
+    @Override
+    public List<Community> getCommunitiesByUserName(String username) {
+        User user=userDao.findByUserName(username);
+
+
+        TypedQuery<Community> theQuery = entityManager.createQuery("from Community where owner=:data", Community.class);
+        theQuery.setParameter("data", user);
+
+        List<Community> theCommunities;
+        try {
+            theCommunities = theQuery.getResultList();
+        } catch (Exception e) {
+            theCommunities = null;
+        }
+
+        return theCommunities;
+    }
 }

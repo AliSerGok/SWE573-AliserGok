@@ -35,7 +35,7 @@ public class UserController {
     public String showUserProfile(Model theModel){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username=authentication.getName();
-        System.out.println(username);
+
         UserProfile userProfile=userProfileDao.findUserProfileByUserName(username);
         theModel.addAttribute("UserProfile",userProfile);
         return "user/userProfile";
@@ -52,7 +52,13 @@ public class UserController {
     @PostMapping("/saveUserProfile")
     public String saveUserProfile(@Valid @ModelAttribute("UserProfile") UserProfile theUserProfile,
                                   BindingResult theBindingResult){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username=authentication.getName();
+        UserProfile userProfile=userProfileDao.findUserProfileByUserName(username);
+        if(userProfile==null){
         userProfileDao.save(theUserProfile);
-        return "redirect:/user/showProfile";
+            return "redirect:/user/showProfile";
+        }
+        return "redirect:/user/createProfile";
     }
 }
