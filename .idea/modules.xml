@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SWE573-AliserGok.iml" filepath="$PROJECT_DIR$/.idea/SWE573-AliserGok.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-mvc/bonus-code-spring-boot-spring-mvc-security-user-registration/demosecurity.iml" filepath="$PROJECT_DIR$/spring-mvc/bonus-code-spring-boot-spring-mvc-security-user-registration/demosecurity.iml" />
     </modules>
   </component>
 </project>
