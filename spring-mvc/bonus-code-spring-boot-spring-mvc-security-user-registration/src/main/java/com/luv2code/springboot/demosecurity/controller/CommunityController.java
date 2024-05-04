@@ -42,14 +42,18 @@ public class CommunityController {
 
         List<Community> communities=communityDao.getAllCommunities();
         theModel.addAttribute("communities", communities);
-        return "community/show-created-communities";
+        return "community/show-all-communities";
     }
+
 
     @GetMapping("/showCommunity")
     public String showCommunity(@RequestParam("communityId") int theId,Model theModel){
         Community community=communityDao.getCommunityById(theId);
-        theModel.addAttribute("community", community);
-        return "community/community-page";
+        if(community!=null){
+            theModel.addAttribute("community", community);
+            return "community/community-page";
+        }
+        return "exceptions/access-denied";
     }
 
     @PostMapping("/processCommunity")

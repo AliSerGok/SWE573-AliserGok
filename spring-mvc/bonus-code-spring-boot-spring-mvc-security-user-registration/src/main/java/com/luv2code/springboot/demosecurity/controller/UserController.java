@@ -1,6 +1,8 @@
 package com.luv2code.springboot.demosecurity.controller;
 
+import com.luv2code.springboot.demosecurity.dao.UserDao;
 import com.luv2code.springboot.demosecurity.dao.UserProfileDao;
+import com.luv2code.springboot.demosecurity.entity.Community;
 import com.luv2code.springboot.demosecurity.entity.UserProfile;
 import com.luv2code.springboot.demosecurity.user.WebUser;
 import jakarta.validation.Valid;
@@ -14,15 +16,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
     private UserProfileDao userProfileDao;
+    private UserDao userDao;
 
     @Autowired
-    public UserController(UserProfileDao userProfileDao) {
+    public UserController(UserProfileDao userProfileDao, UserDao userDao) {
         this.userProfileDao=userProfileDao;
+        this.userDao=userDao;
     }
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
@@ -49,6 +55,17 @@ public class UserController {
         return "user/userProfile-form";
 
     }
+
+    @GetMapping("/showFollowedCommunities")
+    public String showFollowedCommunities(Model theModel){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username=authentication.getName();
+
+        List<Community> communities=userDao.getFollowedCommunities(username);
+        theModel.addAttribute("communities", communities);
+        return "community/show-followed-communities";
+    }
+
     @PostMapping("/saveUserProfile")
     public String saveUserProfile(@Valid @ModelAttribute("UserProfile") UserProfile theUserProfile,
                                   BindingResult theBindingResult){

@@ -1,11 +1,14 @@
 package com.luv2code.springboot.demosecurity.dao;
 
+import com.luv2code.springboot.demosecurity.entity.Community;
 import com.luv2code.springboot.demosecurity.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -40,6 +43,20 @@ public class UserDaoImpl implements UserDao {
 
 		// create the user ... finally LOL
 		entityManager.merge(theUser);
+	}
+
+	@Override
+	public List<Community> getFollowedCommunities(String username) {
+		TypedQuery<Community> theQuery = entityManager.createQuery(
+				"select c " +
+						"from Community c " +
+						"join fetch c.followers f " +
+						"where f.userName = :username", Community.class);
+
+		theQuery.setParameter("username", username);
+
+		return theQuery.getResultList();
+
 	}
 
 
