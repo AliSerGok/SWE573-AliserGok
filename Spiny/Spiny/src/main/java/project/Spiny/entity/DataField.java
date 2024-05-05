@@ -1,18 +1,17 @@
 package project.Spiny.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "template")
-public class Template {
+@Table(name="data_field")
+public class DataField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -21,11 +20,14 @@ public class Template {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "template",fetch = FetchType.EAGER)
-    private Set<DataField> dataFields;
+    @Column(name = "isRequired")
+    private boolean isRequired;
 
     @ManyToOne
-    @JoinColumn(name = "community_id")
-    private Community community;
+    @JoinColumn(name = "data_field_type_id")
+    private DataFieldType dataFieldType;
 
+    @ManyToOne
+    @JoinColumn(name = "template_id")
+    private Template template;
 }
