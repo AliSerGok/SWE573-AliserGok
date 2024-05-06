@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -21,8 +22,8 @@ public class Template {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "template",fetch = FetchType.EAGER)
-    private Set<DataField> dataFields;
+    @OneToMany(mappedBy = "template",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<DataField> dataFields;
 
     @ManyToOne
     @JoinColumn(name = "community_id")

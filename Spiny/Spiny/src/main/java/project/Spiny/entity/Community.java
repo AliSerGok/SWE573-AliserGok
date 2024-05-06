@@ -34,6 +34,14 @@ public class Community {
             inverseJoinColumns = @JoinColumn(name = "follower_id")
     )
     private List<User> followers;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "community",cascade = CascadeType.ALL)
+    private List<Template> templates;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "community",cascade = CascadeType.ALL)
+    private List<Post> posts;
+
+
     public void addFollower(User user){
         this.followers.add(user);
     }

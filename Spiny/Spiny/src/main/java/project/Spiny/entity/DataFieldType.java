@@ -19,4 +19,8 @@ public class DataFieldType {
 
     @Column(name = "type")
     private String type;
+
+    @ManyToOne
+    @JoinColumn(name = "data_field_id")
+    private DataField dataField;
 }
