@@ -194,23 +194,68 @@ CREATE TABLE `template` (
   CONSTRAINT `FK_community_id` FOREIGN KEY (`community_id`) REFERENCES `community` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+INSERT INTO `template` (`name`, `community_id`) VALUES
+('Community Events', 1),
+('General Discussion', 2),
+('Tech News', 3),
+('Foodies Corner', 4),
+('Support Center', 2),
+('Travel Enthusiasts', 5),
+('Photography Showcase', 6),
+('Creative Writing', 2),
+('Fitness Tips', 7),
+('Movie Buffs', 2);
+
+DROP TABLE IF EXISTS `post`;
+CREATE TABLE `post` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(255),
+  `creation_date` DATETIME,
+  `update_date` DATETIME,
+  `like` INT,
+  `dislike` INT,
+  `community_id` INT,
+  `user_id` INT,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_post_community_id` FOREIGN KEY (`community_id`) REFERENCES `community` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_post_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+
 DROP TABLE IF EXISTS `data_field_type`;
 CREATE TABLE `data_field_type` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`)
+  
 );
+INSERT INTO `data_field_type` (`type`) VALUES ('text'),('image'),('video'),('geolocation');
 
 DROP TABLE IF EXISTS `data_field`;
 CREATE TABLE `data_field` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `isRequired` BOOLEAN NOT NULL,
+  `description` VARCHAR(255),
+  `is_required` BOOLEAN NOT NULL DEFAULT FALSE,
+  `post_id` INT,
   `data_field_type_id` INT,
   `template_id` INT,
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_data_field_type_id` FOREIGN KEY (`data_field_type_id`) REFERENCES `data_field_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_post_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_template_id` FOREIGN KEY (`template_id`) REFERENCES `template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+INSERT INTO `data_field` (`name`, `is_required`, `data_field_type_id`, `template_id`) VALUES
+('Event Date', TRUE, 1, 1), ('Location', TRUE, 4, 1), ('Description', TRUE, 1, 1), ('Event Image', FALSE, 2, 1),
+('Topic', TRUE, 1, 2), ('Content', TRUE, 1, 2), ('Tags', FALSE, 1, 2), ('Attachment', FALSE, 2, 2),
+('Headline', TRUE, 1, 3), ('Article', TRUE, 1, 3), ('Source', TRUE, 1, 3), ('Thumbnail', FALSE, 2, 3),
+('Dish Name', TRUE, 1, 4), ('Recipe', TRUE, 1, 4), ('Ingredients', TRUE, 1, 4), ('Image', FALSE, 2, 4),
+('Issue', TRUE, 1, 5), ('Description', TRUE, 1, 5), ('Screenshot', FALSE, 2, 5), ('Priority', FALSE, 1, 5),
+('Destination', TRUE, 1, 6), ('Travel Date', TRUE, 1, 6), ('Experience', TRUE, 1, 6), ('Photo', FALSE, 2, 6),
+('Photo Title', TRUE, 1, 7), ('Description', TRUE, 1, 7), ('Camera Used', FALSE, 1, 7), ('Image', FALSE, 2, 7),
+('Title', TRUE, 1, 8), ('Content', TRUE, 1, 8), ('Genre', TRUE, 1, 8), ('Cover Image', FALSE, 2, 8),
+('Tip Title', TRUE, 1, 9), ('Description', TRUE, 1, 9), ('Category', TRUE, 1, 9), ('Video', FALSE, 3, 9),
+('Movie Title', TRUE, 1, 10), ('Review', TRUE, 1, 10), ('Rating', TRUE, 1, 10), ('Poster', FALSE, 2, 10);
+
 
 

@@ -56,15 +56,33 @@ public class CommunityController {
         }
         return "exceptions/access-denied";
     }
+    @GetMapping("/updateCommunityPage")
+    public String updateCommunityPage(@RequestParam("communityId") int theId,Model theModel){
+        Community community=communityDao.getCommunityById(theId);
+        if(community!=null){
+            theModel.addAttribute("community", community);
+            return "community/update-community-page";
+        }
+        return "exceptions/access-denied";
+    }
 
     @PostMapping("/processCommunity")
     public String saveCommunity(@Valid @ModelAttribute("community") Community theCommunity){
-        String name=theCommunity.getName();
-        Community community =communityDao.findByName(name);
-        System.out.println(name);
 
         communityDao.save(theCommunity);
         return "community/community-page";
+    }
+
+    @PostMapping("/updateCommunity")
+    public String updateCommunity(@Valid @ModelAttribute("community") Community theCommunity,Model theModel){
+
+        communityDao.update(theCommunity);
+        Community community=communityDao.getCommunityById(theCommunity.getId());
+        if(community!=null){
+            theModel.addAttribute("community", community);
+            return "community/community-page";
+        }
+        return "exceptions/access-denied";
     }
 
     @GetMapping("/followCommunity")

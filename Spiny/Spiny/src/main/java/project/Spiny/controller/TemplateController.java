@@ -35,8 +35,10 @@ public class TemplateController {
     public String templateForm(Model theModel){
         Template theTemplate=new Template();
         List<DataFieldType> dataFieldTypes=dataFieldTypeDao.getAllDataFieldType();
+        DataField dataField=new DataField();
         theModel.addAttribute("dataFieldTypes",dataFieldTypes);
         theModel.addAttribute("template",theTemplate);
+        theModel.addAttribute("dataField",dataField);
 
         return "template/test";
     }

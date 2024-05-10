@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +22,10 @@ public class DataFieldType {
     @Column(name = "type")
     private String type;
 
-    @ManyToOne
-    @JoinColumn(name = "data_field_id")
-    private DataField dataField;
+    @OneToMany(mappedBy = "dataFieldType",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    private List<DataField> dataField;
+
+    public void addDataField(DataField dataField){
+        this.dataField.add(dataField);
+    }
 }

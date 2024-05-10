@@ -46,5 +46,14 @@ public class Community {
         this.followers.add(user);
     }
 
+    public void addTemplate(Template template){
+        this.templates.add(template);
+    }
+
+    public void addPost(Post post){
+        this.posts.add(post);
+    }
+
+
 
 }

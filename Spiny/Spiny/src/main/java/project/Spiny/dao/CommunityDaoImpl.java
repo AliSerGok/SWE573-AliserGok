@@ -32,6 +32,15 @@ public class CommunityDaoImpl implements CommunityDao{
         entityManager.persist(community);
     }
 
+    @Override
+    @Transactional
+    public void update(Community theCommunity) {
+        Community community=entityManager.find(Community.class,theCommunity.getId());
+        community.setName(theCommunity.getName());
+        community.setDescription(theCommunity.getDescription());
+        entityManager.merge(community);
+    }
+
 
     @Override
     public Community findByName(String name) {

@@ -21,17 +21,23 @@ public class DataField {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "isRequired")
+    @Column(name = "is_required")
     private boolean isRequired;
 
-    @OneToMany(mappedBy = "dataField",fetch = FetchType.EAGER,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    private List<DataFieldType> dataFieldType;
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinColumn(name = "data_field_type_id")
+    private DataFieldType dataFieldType;
 
     @ManyToOne
     @JoinColumn(name = "template_id")
     private Template template;
 
-    public void addDataFieldType(DataFieldType dataFieldType){
-        this.dataFieldType.add(dataFieldType);
-    }
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+
 }

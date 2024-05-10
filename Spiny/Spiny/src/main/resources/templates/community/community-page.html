@@ -8,6 +8,11 @@
 <body>
 <div th:if="${session.user}" >
   <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
+  <p th:text="'user name: ' + ${session.user.userName}"></p>
+</div>
+
+<div th:if="${session.user.userName} == ${community.owner.userName}">
+  <a th:href="@{/community/updateCommunityPage(communityId=${community.id})}">Update</a>
 </div>
 
 <div>
@@ -19,12 +24,44 @@
       <a th:href="@{/community/followCommunity(communityId=${community.id})}">Follow</a>
 
     </div>
+    <br>
+    <div>
+      Followers:
 
-   Followers
-    <tr th:each="follower : ${community.followers}">
+      <tr th:each="follower : ${community.followers}">
 
-      <td th:text="${follower.userName}"></td>
-      <hr>
+        <td th:text="${follower.userName}"></td>
+        <hr>
+    </div>
+     <br>
+    <div>
+      Templates:
+      <tr th:each="template : ${community.templates}">
+
+        <td th:text="${template.name}"></td>
+        <a th:href="@{/post/showPostForm(templateId=${template.id})}">Select</a>
+        <hr>
+    </div>
+    <br>
+      <div>
+        Posts:
+        <tr th:each="post : ${community.posts}">
+
+          <td th:text="${template.name}"></td>
+
+          Name: <span th:text="${post.title}"></span><br><br>
+
+          <ul>
+            <li th:each="tempPost : ${post.dataFields}">
+              <span th:text="${tempPost.name}"></span><br><br>
+              <span th:text="${tempPost.description}"></span><br><br>
+
+            </li>
+          </ul>
+          <a th:href="@{/post/shoForm(templateId=${template.id})}">Select</a>
+          <hr>
+      </div>
+
 
   </form>
 </div>

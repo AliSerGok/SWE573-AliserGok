@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+</head>
+<body>
+<div th:if="${session.user}">
+    <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
+</div>
+
+<div>
+    <form action="#" th:action="@{/post/processPostForm}" th:object="${post}" method="post">
+
+        Name: <span th:text="${post.title}"></span><br><br>
+
+        <ul>
+            <li th:each="tempDataField : ${post.dataFields}">
+                <span th:text="${tempDataField.name}"></span><br><br>
+                <!--<input type="text" th:field="*{tempDataField.description}"/>-->
+            </li>
+        </ul>
+        <button type="submit">Create</button>
+
+    </form>
+</div>
+
+</body>
+</html>
