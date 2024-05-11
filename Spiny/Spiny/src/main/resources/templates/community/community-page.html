@@ -12,7 +12,7 @@
 </div>
 
 <div th:if="${session.user.userName} == ${community.owner.userName}">
-  <a th:href="@{/community/updateCommunityPage(communityId=${community.id})}">Update</a>
+  <a th:href="@{/community/updateCommunityPage(communityId=${community.id})}">Update Your Community</a>
 </div>
 
 <div>

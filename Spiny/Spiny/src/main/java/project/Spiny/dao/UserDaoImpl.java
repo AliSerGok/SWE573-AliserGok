@@ -4,10 +4,13 @@ package project.Spiny.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import project.Spiny.entity.Community;
 import project.Spiny.entity.User;
+import project.Spiny.entity.UserProfile;
 
 import java.util.List;
 

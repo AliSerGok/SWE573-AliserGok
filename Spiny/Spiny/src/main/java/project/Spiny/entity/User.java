@@ -49,12 +49,14 @@ public class User {
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     private List<Post> createdPosts;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name = "community_followers",
             joinColumns = @JoinColumn(name = "follower_id"),
             inverseJoinColumns = @JoinColumn(name = "community_id")
     )
     private List<Community> followedCommunities;
+
+
     public User() {
     }
 
@@ -83,5 +85,6 @@ public class User {
     public void addFollowedCommunities(Community community){
         this.followedCommunities.add(community);
     }
+
 
 }

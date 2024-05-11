@@ -38,14 +38,19 @@ public class UserController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
     @GetMapping("/showProfile")
-    public String showUserProfile(Model theModel){
+    public String showUserProfile(@RequestParam(value = "userId", required = false) Integer id, Model theModel){
+       if(id!=null){
+           int userId= id;
+           UserProfile userProfile=userProfileDao.findUserProfileById(userId);
+           theModel.addAttribute("UserProfile",userProfile);
+           return "user/userProfile";
+       }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username=authentication.getName();
 
         UserProfile userProfile=userProfileDao.findUserProfileByUserName(username);
         theModel.addAttribute("UserProfile",userProfile);
         return "user/userProfile";
-
     }
 
     @GetMapping("/createProfile")
@@ -66,6 +71,14 @@ public class UserController {
         return "community/show-followed-communities";
     }
 
+    @GetMapping("/showAllUsers")
+    public String showAllUsers(Model theModel){
+        List<UserProfile> userProfiles=userProfileDao.getAllUsers();
+        theModel.addAttribute("userProfiles", userProfiles);
+        return "user/show-all-user";
+    }
+
+
     @PostMapping("/saveUserProfile")
     public String saveUserProfile(@Valid @ModelAttribute("UserProfile") UserProfile theUserProfile,
                                   BindingResult theBindingResult){
@@ -77,5 +90,22 @@ public class UserController {
             return "redirect:/user/showProfile";
         }
         return "redirect:/user/createProfile";
+    }
+
+    @GetMapping("/updateUserProfileForm")
+    public String updateUserProfileForm(@Valid @ModelAttribute("UserProfileId") int id,Model theModel,
+                                  BindingResult theBindingResult){
+
+        UserProfile userProfile=userProfileDao.findUserProfileById(id);
+        theModel.addAttribute("userProfile",userProfile);
+        return "user/userProfile-update-form";
+    }
+
+    @PostMapping("/updateUserProfile")
+    public String updateUserProfile(@Valid @ModelAttribute("userProfile") UserProfile theUserProfile,
+                                        BindingResult theBindingResult){
+
+        userProfileDao.updateUserProfile(theUserProfile);
+        return "redirect:/user/showProfile";
     }
 }

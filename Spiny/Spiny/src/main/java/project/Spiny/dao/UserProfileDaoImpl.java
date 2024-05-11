@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.Spiny.entity.User;
 import project.Spiny.entity.UserProfile;
 
+import java.util.List;
+
 @Repository
 public class UserProfileDaoImpl implements UserProfileDao{
     private EntityManager entityManager;
@@ -20,7 +22,6 @@ public class UserProfileDaoImpl implements UserProfileDao{
     @Autowired
     public UserProfileDaoImpl(EntityManager entityManager, UserDao userDao) {
         this.entityManager = entityManager;
-        this.userDao = userDao;
 
     }
 
@@ -41,6 +42,31 @@ public class UserProfileDaoImpl implements UserProfileDao{
         }
 
         return theUserProfile;
+    }
+
+    @Override
+    public UserProfile findUserProfileById(int id) {
+
+        return entityManager.find(UserProfile.class,id);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserProfile(UserProfile userProfile) {
+        UserProfile userProfileMerge=entityManager.find(UserProfile.class,userProfile.getId());
+
+        userProfileMerge.setName(userProfile.getName());
+        userProfileMerge.setDescription(userProfile.getDescription());
+        userProfileMerge.setAge(userProfile.getAge());
+        userProfileMerge.setCity(userProfile.getCity());
+        userProfileMerge.setGender(userProfile.getGender());
+        entityManager.merge(userProfileMerge);
+    }
+
+    @Override
+    public List<UserProfile> getAllUsers() {
+        TypedQuery<UserProfile> theQuery= entityManager.createQuery("select u from UserProfile u", UserProfile.class);
+        return theQuery.getResultList();
     }
 
     @Override

@@ -1,0 +1,58 @@
+<!DOCTYPE Html>
+<Html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Communities</title>
+</head>
+<body>
+<h2>Spiny Communities</h2>
+Authorized name: <span sec:authentication="principal.username"></span><br><br>
+<hr>
+
+<form action="#" th:action="@{/logout}" method="POST">
+  <button type="submit" >Logout</button>
+</form>
+
+</body>
+
+<div class="container">
+
+  <h3>User List</h3>
+  <hr>
+
+
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+    <tr>
+      <th>User Name</th>
+      <th>  View  </th>
+
+
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="tempUserProfile : ${userProfiles}">
+
+      <td th:text="${tempUserProfile.name}"></td>
+      <td>
+        <a th:href="@{/user/showProfile(userId=${tempUserProfile.id})}">View</a>
+      </td>
+      <td>
+        <!--
+        <div sec:authorize="hasRole('USER')">
+          <a th:href="@{/community/delete(communityId=${tempCommunity.id})}"
+             onclick="if(!(confirm('Are you sure to delete this community'))) return false">Delete</a>
+        </div>-->
+      </td>
+
+
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+
+</Html>

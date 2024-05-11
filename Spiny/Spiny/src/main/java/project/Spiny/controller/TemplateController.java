@@ -48,7 +48,7 @@ public class TemplateController {
 
     // Spring controller
     @PostMapping("/processTemplate")
-    public String createTemplate(@RequestParam("template") Template template) {
+    public String createTemplate(@RequestParam(value = "template") Template template) {
 
         templateDao.saveOrUpdate(template);
 

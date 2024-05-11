@@ -9,6 +9,9 @@
 <div th:if="${session.user}" >
     <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
 </div>
+<div th:if="${session.user.userName} == ${UserProfile.user.userName}">
+    <a th:href="@{/user/updateUserProfileForm(UserProfileId=${UserProfile.id})}">Update Your Profile</a>
+</div>
 
 <div>
     <form action="#"  th:object="${UserProfile}" >

@@ -14,4 +14,5 @@ public interface UserDao {
     void save(User theUser);
 
     List<Community> getFollowedCommunities(String username);
+
 }
