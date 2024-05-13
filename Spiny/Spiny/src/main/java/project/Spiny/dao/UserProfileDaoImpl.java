@@ -22,6 +22,7 @@ public class UserProfileDaoImpl implements UserProfileDao{
     @Autowired
     public UserProfileDaoImpl(EntityManager entityManager, UserDao userDao) {
         this.entityManager = entityManager;
+        this.userDao = userDao;
 
     }
 
