@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>Create Post Template</h1>
-<form id="templateForm" th:action="@{/template/processTemplate}" method="post" th:object="${template}">
+<form id="templateForm" action="#" th:action="@{/template/processTemplate}" method="post" th:object="${template}">
     <label for="templateName">Template Name:</label>
     <input type="text" id="templateName" th:field="*{name}" maxlength="100">
 
@@ -57,12 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add options to the dropdown
         const options = [
-            { value: 'description', label: 'Description' },
-            { value: 'image_url', label: 'Image URL' },
-            { value: 'video_url', label: 'Video URL' },
+            { value: 'text', label: 'text' },
+            { value: 'image', label: 'Image' },
+            { value: 'video', label: 'Video' },
             { value: 'geolocation', label: 'Geolocation' },
-            { value: 'date_time_fields', label: 'Date-Time Field' },
-            { value: 'audio_url', label: 'Audio URL' }
+            { value: 'audio', label: 'Audio' }
         ];
         options.forEach(option => {
             const optionElement = document.createElement('option');

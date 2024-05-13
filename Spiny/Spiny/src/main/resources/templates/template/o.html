@@ -6,52 +6,99 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <!-- Gerekirse CSS dosyalarını buraya ekleyebilirsiniz -->
 </head>
-
 <body>
-<div class="container-fluid">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <form method="post" th:id="template_form" th:action="@{/template/processTemplate}" >
-        <label>Template Name:</label>
-        <input type="text" name="post_title" placeholder="Enter template name" class="form-control">
-        <br/>
-        <label>Template Description:</label>
-        <textarea name="post_description" placeholder="Enter template description" class="form-control"></textarea>
-        <br/>
-        <div id="dynamic_fields"></div>
-        <input type="hidden" name="field_count" id="field_count" value="0">
-        <br/>
-        <button type="button" id="add_field" class="btn btn-primary btn-sm">Add Field</button>
-        <br/> <br/>
-        <button type="submit" class="btn btn-success">Submit</button>
-      </form>
-    </div>
-  </div>
-</div>
+<h1>Create Post Template</h1>
+<form id="templateForm" th:action="@{/template/processTemplate}" method="post" th:object="${template}">
+  <label for="templateName">Template Name:</label>
+  <input type="text" id="templateName" th:field="*{name}" maxlength="100">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <div id="dynamicFields"></div>
+  <button type="button" id="addFieldButton">Add Field</button>
+  <button type="submit">Save Template</button>
+
+  <!-- Hidden input for dataField list -->
+  <input type="hidden" id="dataFieldList" name="dataFieldList">
+</form>
+
+</body>
+</html>
+
+
+
 <script>
-$(document).ready(function() {
-    let fieldCount = 0;
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('addFieldButton');
+    const container = document.getElementById('dynamicFields');
+    let dropdownCount = 0;
+    let dataFieldList = []; // Empty array to hold dataField objects
 
-    $('#add_field').click(function() {
-        $('#dynamic_fields').append(`
-        <div class="row no-gutters">
-            <div class="col-md-3">
-                <input type="text" name="custom_field_${fieldCount}" placeholder="Field Name" class="form-control">
-                <select name="custom_type_${fieldCount}" class="form-control">
-                    <option value="text">Text</option>
-                    <option value="textArea">Text Area</option>
-                    <option value="number">Number</option>
-                    <option value="date">Date</option>
-                </select>
-                <br/>
-            </div>
-        </div>
-        `);
-        $('#field_count').val(++fieldCount);
+    addButton.addEventListener('click', function() {
+        dropdownCount++;
+        const newFieldDiv = document.createElement('div');
+        newFieldDiv.classList.add('field-container');
+
+        const nameLabel = document.createElement('label');
+        nameLabel.textContent = 'Field Name:';
+        newFieldDiv.appendChild(nameLabel);
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.setAttribute('id', `nameInput-${dropdownCount}`);
+        nameInput.classList.add('form-control');
+        newFieldDiv.appendChild(nameInput);
+
+        const dropdownLabel = document.createElement('label');
+        dropdownLabel.textContent = 'Select Field:';
+        newFieldDiv.appendChild(dropdownLabel);
+
+        const newDropdown = document.createElement('select');
+        newDropdown.setAttribute('id', `dropdown-${dropdownCount}`);
+        newDropdown.classList.add('form-control');
+
+        // Add options to the dropdown
+        const options = [
+            { value: 'description', label: 'Description' },
+            { value: 'image_url', label: 'Image URL' },
+            { value: 'video_url', label: 'Video URL' },
+            { value: 'geolocation', label: 'Geolocation' },
+            { value: 'date_time_fields', label: 'Date-Time Field' },
+            { value: 'audio_url', label: 'Audio URL' }
+        ];
+        options.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option.value;
+            optionElement.textContent = option.label;
+            newDropdown.appendChild(optionElement);
+        });
+
+        newFieldDiv.appendChild(newDropdown);
+
+        container.appendChild(newFieldDiv);
+
+        // Add dataField object to the array
+        const dataField = {
+            id: dropdownCount,
+            name: nameInput.value,
+            value: newDropdown.value
+        };
+        dataFieldList.push(dataField);
+
+    });
+
+    templateForm.addEventListener('submit', function(e) {
+    for(let i = 1; i <= dropdownCount; i++) {
+        let dropdown = document.getElementById(`dropdown-${i}`);
+        let name = document.getElementById(`nameInput-${i}`);
+        console.log(dropdown);
+        dataFieldList[i-1].value = dropdown.value;
+        dataFieldList[i-1].name = name.value;
+        console.log("df", dataFieldList[i-1]);
+    }
+    const form = document.getElementById('templateForm');
+    // Update hidden input value with JSON array
+    let dfInput = document.getElementById('dataFieldList')
+    document.getElementById('dataFieldList').value = JSON.stringify(dataFieldList);
+    console.log(form);
     });
 });
 </script>
-</body>
-</html>

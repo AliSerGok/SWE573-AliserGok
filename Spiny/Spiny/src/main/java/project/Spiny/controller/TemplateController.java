@@ -34,20 +34,19 @@ public class TemplateController {
     @GetMapping("/templateForm")
     public String templateForm(Model theModel){
         Template theTemplate=new Template();
-        List<DataField> dataFields=new ArrayList<>();
-
         theModel.addAttribute("template",theTemplate);
-        theModel.addAttribute("dataField",dataFields);
+
 
         return "template/template-form";
     }
 
-    @PostMapping("/template/processTemplate")
+    @PostMapping("/processTemplate")
     public String processTemplate(@ModelAttribute("template") Template template,
                                   @RequestParam("dataFieldList") String dataFieldListJson,
                                   Model model)  {
 
         System.out.println(template);
+        System.out.println(dataFieldListJson);
 
         // JSON formatındaki dataFieldList'i Java listesine dönüştür
         ObjectMapper objectMapper = new ObjectMapper();
@@ -66,6 +65,8 @@ public class TemplateController {
                 System.out.println("Field Name: " + fieldName + ", Field Value: " + fieldValue);
             }
         }
+        System.out.println(template);
+        System.out.println(dataFieldListJson);
 
         // Template ve dataField listesini model'e ekle
         model.addAttribute("template", template);
