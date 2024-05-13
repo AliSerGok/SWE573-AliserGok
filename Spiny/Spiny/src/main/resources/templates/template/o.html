@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New Template</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Gerekirse CSS dosyalarını buraya ekleyebilirsiniz -->
+</head>
+
+<body>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form method="post" th:id="template_form" th:action="@{/template/processTemplate}" >
+        <label>Template Name:</label>
+        <input type="text" name="post_title" placeholder="Enter template name" class="form-control">
+        <br/>
+        <label>Template Description:</label>
+        <textarea name="post_description" placeholder="Enter template description" class="form-control"></textarea>
+        <br/>
+        <div id="dynamic_fields"></div>
+        <input type="hidden" name="field_count" id="field_count" value="0">
+        <br/>
+        <button type="button" id="add_field" class="btn btn-primary btn-sm">Add Field</button>
+        <br/> <br/>
+        <button type="submit" class="btn btn-success">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    let fieldCount = 0;
+
+    $('#add_field').click(function() {
+        $('#dynamic_fields').append(`
+        <div class="row no-gutters">
+            <div class="col-md-3">
+                <input type="text" name="custom_field_${fieldCount}" placeholder="Field Name" class="form-control">
+                <select name="custom_type_${fieldCount}" class="form-control">
+                    <option value="text">Text</option>
+                    <option value="textArea">Text Area</option>
+                    <option value="number">Number</option>
+                    <option value="date">Date</option>
+                </select>
+                <br/>
+            </div>
+        </div>
+        `);
+        $('#field_count').val(++fieldCount);
+    });
+});
+</script>
+</body>
+</html>

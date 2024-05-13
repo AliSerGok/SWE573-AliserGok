@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Template</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Gerekirse CSS dosyalarını buraya ekleyebilirsiniz -->
+</head>
+<body>
+<h1>Create Post Template</h1>
+<form id="templateForm" th:action="@{/template/processTemplate}" method="post" th:object="${template}">
+    <label for="templateName">Template Name:</label>
+    <input type="text" id="templateName" th:field="*{name}" maxlength="100">
+
+    <div id="dynamicFields"></div>
+    <button type="button" id="addFieldButton">Add Field</button>
+    <button type="submit">Save Template</button>
+
+    <!-- Hidden input for dataField list -->
+    <input type="hidden" id="dataFieldList" name="dataFieldList">
+</form>
+
+</body>
+</html>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('addFieldButton');
+    const container = document.getElementById('dynamicFields');
+    let dropdownCount = 0;
+    let dataFieldList = []; // Empty array to hold dataField objects
+
+    addButton.addEventListener('click', function() {
+        dropdownCount++;
+        const newFieldDiv = document.createElement('div');
+        newFieldDiv.classList.add('field-container');
+
+        const nameLabel = document.createElement('label');
+        nameLabel.textContent = 'Field Name:';
+        newFieldDiv.appendChild(nameLabel);
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.setAttribute('id', `nameInput-${dropdownCount}`);
+        nameInput.classList.add('form-control');
+        newFieldDiv.appendChild(nameInput);
+
+        const dropdownLabel = document.createElement('label');
+        dropdownLabel.textContent = 'Select Field:';
+        newFieldDiv.appendChild(dropdownLabel);
+
+        const newDropdown = document.createElement('select');
+        newDropdown.setAttribute('id', `dropdown-${dropdownCount}`);
+        newDropdown.classList.add('form-control');
+
+        // Add options to the dropdown
+        const options = [
+            { value: 'description', label: 'Description' },
+            { value: 'image_url', label: 'Image URL' },
+            { value: 'video_url', label: 'Video URL' },
+            { value: 'geolocation', label: 'Geolocation' },
+            { value: 'date_time_fields', label: 'Date-Time Field' },
+            { value: 'audio_url', label: 'Audio URL' }
+        ];
+        options.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option.value;
+            optionElement.textContent = option.label;
+            newDropdown.appendChild(optionElement);
+        });
+
+        newFieldDiv.appendChild(newDropdown);
+
+        container.appendChild(newFieldDiv);
+
+        // Add dataField object to the array
+        const dataField = {
+            id: dropdownCount,
+            name: nameInput.value,
+            value: newDropdown.value
+        };
+        dataFieldList.push(dataField);
+
+    });
+
+    templateForm.addEventListener('submit', function(e) {
+    for(let i = 1; i <= dropdownCount; i++) {
+        let dropdown = document.getElementById(`dropdown-${i}`);
+        let name = document.getElementById(`nameInput-${i}`);
+        console.log(dropdown);
+        dataFieldList[i-1].value = dropdown.value;
+        dataFieldList[i-1].name = name.value;
+        console.log("df", dataFieldList[i-1]);
+    }
+    const form = document.getElementById('templateForm');
+    // Update hidden input value with JSON array
+    let dfInput = document.getElementById('dataFieldList')
+    document.getElementById('dataFieldList').value = JSON.stringify(dataFieldList);
+    console.log(form);
+    });
+});
+</script>

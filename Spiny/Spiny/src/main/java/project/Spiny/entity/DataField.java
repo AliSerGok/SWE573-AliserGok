@@ -25,7 +25,7 @@ public class DataField {
     private boolean isRequired;
 
     @Column(name = "description")
-    private String description;
+    private String value;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "data_field_type_id")

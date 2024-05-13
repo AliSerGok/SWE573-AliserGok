@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Advance Search</title>
+  <script>
+    function showDateField1() {
+        var postDateDiv = document.getElementById("postDateDiv");
+        if (postDateDiv) {
+            postDateDiv.style.display = document.getElementById("searchPosts").checked ? "block" : "none";
+        }
+    }
+
+    function showDateField() {
+        var communityDescription = document.getElementById("communityDescription");
+        if (communityDescription) {
+            communityDescription.style.display = document.getElementById("searchCommunities").checked ? "block" : "none";
+        }
+    }
+  </script>
+</head>
+<body>
+<h2>Advance Search</h2>
+<form th:action="@{/search/processSearchForm}" th:object="${search}" method="post">
+  <label for="keyword">Keyword:</label>
+  <input type="text" id="keyword" th:field="*{keyword}">
+  <br>
+  <label>Search in:</label>
+  <div>
+    <input type="checkbox" id="searchCommunities" th:field="*{searchInCommunity}" onchange="showDateField()">
+    <label for="searchCommunities">Communities</label>
+    <div id="communityDescription" style="display: none;">
+      <input type="checkbox" id="ComDescription" th:field="*{inDescriptions}" onchange="showDateField()">
+      <label for="ComDescription">in descriptions</label>
+    </div>
+  </div>
+  <div>
+    <input type="checkbox" id="searchPeople" th:field="*{searchInPeople}" onchange="showDateField()">
+    <label for="searchPeople">People</label>
+  </div>
+  <div>
+    <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" onchange="showDateField1()">
+    <label for="searchPosts">Posts</label>
+  </div>
+  <br>
+  <div id="postDateDiv" style="display: none;">
+    <label for="postDate">Post Date:</label>
+    <input type="date" id="postDate" th:field="*{postDate}">
+  </div>
+  <br>
+  <input type="submit" value="Search">
+</form>
+</body>
+</html>

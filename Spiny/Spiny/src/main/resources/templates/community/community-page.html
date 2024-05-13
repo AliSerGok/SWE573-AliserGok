@@ -24,6 +24,11 @@
       <a th:href="@{/community/followCommunity(communityId=${community.id})}">Follow</a>
 
     </div>
+
+    <div sec:authorize="hasRole('USER')">
+      <a th:href="@{/template/templateForm(communityId=${community.id})}">Create template</a>
+
+    </div>
     <br>
     <div>
       Followers:
