@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+</head>
+<body>
+<h2>Search Results</h2>
+<div>
+<table class="table table-bordered table-striped">
+    <h3>Community Results</h3>
+    <thead class="table-dark">
+    <tr>
+        <th>Community Name</th>
+        <th>Description</th>
+        <div sec:authorize="hasRole('USER')">
+            <th>  View  </th>
+        </div>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="tempCommunity : ${communitiesFound}">
+
+        <td th:text="${tempCommunity.name}"></td>
+        <td th:text="${tempCommunity.description}"></td>
+        <td>
+            <div sec:authorize="hasRole('USER')">
+            <a th:href="@{/community/showCommunity(communityId=${tempCommunity.id})}">View</a>
+
+        </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+<div>
+    <table class="table table-bordered table-striped">
+        <h3>People Results</h3>
+        <thead class="table-dark">
+        <tr>
+            <th>User Name</th>
+            <div sec:authorize="hasRole('USER')">
+                <th>  View  </th>
+            </div>
+
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="tempUser : ${peopleFound}">
+
+            <td th:text="${tempUser.name}"></td>
+            <td>
+                <div sec:authorize="hasRole('USER')">
+                    <a th:href="@{/user/showProfile(userId=${tempUser.id})}">View</a>
+
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <table class="table table-bordered table-striped">
+        <h3>Post Results</h3>
+
+    </table>
+</div>
+
+</body>
+</html>

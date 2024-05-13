@@ -56,6 +56,8 @@ public class CommunityController {
         }
         return "exceptions/access-denied";
     }
+
+
     @GetMapping("/updateCommunityPage")
     public String updateCommunityPage(@RequestParam("communityId") int theId,Model theModel){
         Community community=communityDao.getCommunityById(theId);

@@ -24,12 +24,11 @@ public class DataField {
     @Column(name = "is_required")
     private boolean isRequired;
 
-    @Column(name = "description")
-    private String value;
+    @Column(name = "input_value")
+    private String inputValue;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinColumn(name = "data_field_type_id")
-    private DataFieldType dataFieldType;
+    @Column(name = "value")
+    private String value;
 
     @ManyToOne
     @JoinColumn(name = "template_id")

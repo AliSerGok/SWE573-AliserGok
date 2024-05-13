@@ -29,4 +29,10 @@ public class Template {
     @JoinColumn(name = "community_id")
     private Community community;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+
+
 }

@@ -11,6 +11,7 @@
 <form id="templateForm" action="#" th:action="@{/template/processTemplate}" method="post" th:object="${template}">
     <label for="templateName">Template Name:</label>
     <input type="text" id="templateName" th:field="*{name}" maxlength="100">
+    <input type="hidden" name="communityId" th:value="${communityId}" />
 
     <div id="dynamicFields"></div>
     <button type="button" id="addFieldButton">Add Field</button>
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add options to the dropdown
         const options = [
-            { value: 'text', label: 'text' },
+            { value: 'text', label: 'Text' },
             { value: 'image', label: 'Image' },
             { value: 'video', label: 'Video' },
             { value: 'geolocation', label: 'Geolocation' },
@@ -76,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add dataField object to the array
         const dataField = {
-            id: dropdownCount,
             name: nameInput.value,
             value: newDropdown.value
         };

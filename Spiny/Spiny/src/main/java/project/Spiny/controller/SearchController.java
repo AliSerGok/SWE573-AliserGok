@@ -5,10 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import project.Spiny.dao.SearchDao;
-import project.Spiny.entity.Community;
-import project.Spiny.entity.Post;
-import project.Spiny.entity.Search;
-import project.Spiny.entity.User;
+import project.Spiny.entity.*;
 
 import java.util.List;
 
@@ -32,11 +29,20 @@ public class SearchController {
     @PostMapping("/processSearchForm")
     public String processSearchForm(@ModelAttribute("search") Search search, Model model){
         System.out.println("successes");
-        List<Community> communities=searchDao.getCommunitiesByKeySearch(search);
-        List<User> people=searchDao.getUsersByKeySearch(search);
-        List<Post> posts=searchDao.getPostsByKeySearch(search);
+        if(search!=null && search.getSearchInCommunity()){
+            List<Community> communities=searchDao.getCommunitiesByKeySearch(search);
+            model.addAttribute("communitiesFound",communities);
+        }
+        if(search!=null && search.getSearchInPeople()){
+            List<UserProfile> people=searchDao.getUsersByKeySearch(search);
+            model.addAttribute("peopleFound",people);
+        }
+        if(search!=null && search.getSearchInPosts()){
+            List<Post> posts=searchDao.getPostsByKeySearch(search);
+            model.addAttribute("postsFound",posts);
+        }
 
-        return "search/search-form";
+        return "search/search-results-form";
     }
 
 

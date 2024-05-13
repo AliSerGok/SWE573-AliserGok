@@ -4,11 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import project.Spiny.entity.Community;
-import project.Spiny.entity.Post;
-import project.Spiny.entity.Search;
-import project.Spiny.entity.User;
+import project.Spiny.entity.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,8 +51,19 @@ public class SearchDaoImpl implements SearchDao {
     }
 
     @Override
-    public List<User> getUsersByKeySearch(Search search) {
-        return null;
+    public List<UserProfile> getUsersByKeySearch(Search search) {
+        if(search == null || search.getKeyword() == null){
+            return Collections.emptyList();
+        }
+        String keyWord=search.getKeyword();
+        List<UserProfile> userFoundList=new ArrayList<>();
+        if(search.getSearchInPeople()){
+            TypedQuery<UserProfile> theQuery=entityManager.createQuery("SELECT u FROM UserProfile u WHERE u.name LIKE CONCAT('%', :keyword, '%')", UserProfile.class);
+            theQuery.setParameter("keyword",keyWord);
+            userFoundList=theQuery.getResultList();
+
+        }
+        return userFoundList;
     }
 
     @Override

@@ -25,10 +25,6 @@
 
     </div>
 
-    <div sec:authorize="hasRole('USER')">
-      <a th:href="@{/template/templateForm(communityId=${community.id})}">Create template</a>
-
-    </div>
     <br>
     <div>
       Followers:
@@ -40,6 +36,7 @@
     </div>
      <br>
     <div>
+      <a th:href="@{/template/templateForm(communityId=${community.id})}">Create new template</a><br>
       Templates:
       <tr th:each="template : ${community.templates}">
 
@@ -48,23 +45,20 @@
         <hr>
     </div>
     <br>
-      <div>
+      <div th:if="${community.posts != null}" >
         Posts:
         <tr th:each="post : ${community.posts}">
 
-          <td th:text="${template.name}"></td>
 
           Name: <span th:text="${post.title}"></span><br><br>
 
           <ul>
             <li th:each="tempPost : ${post.dataFields}">
               <span th:text="${tempPost.name}"></span><br><br>
-              <span th:text="${tempPost.description}"></span><br><br>
+              <span th:text="${tempPost.inputValue}"></span><br><br>
 
             </li>
           </ul>
-          <a th:href="@{/post/shoForm(templateId=${template.id})}">Select</a>
-          <hr>
       </div>
 
 

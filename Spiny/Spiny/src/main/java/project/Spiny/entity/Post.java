@@ -30,10 +30,7 @@ public class Post {
 
     public Post() {
         DataField dataFieldContent=new DataField();
-        DataFieldType dataFieldType=new DataFieldType();
         dataFieldContent.setName("Content");
-        dataFieldType.setType("text");
-        dataFieldContent.setDataFieldType(dataFieldType);
         dataFields.add(dataFieldContent);
     }
 

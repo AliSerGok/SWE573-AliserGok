@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import project.Spiny.dao.CommunityDao;
 import project.Spiny.dao.DataFieldDao;
 import project.Spiny.dao.DataFieldTypeDao;
 import project.Spiny.dao.TemplateDao;
@@ -21,21 +22,21 @@ import java.util.List;
 public class TemplateController {
     TemplateDao templateDao;
     DataFieldDao dataFieldDao;
-    DataFieldTypeDao dataFieldTypeDao;
+    CommunityDao communityDao;
 
 
     @Autowired
-    public TemplateController(TemplateDao templateDao, DataFieldDao dataFieldDao, DataFieldTypeDao dataFieldTypeDao) {
+    public TemplateController(TemplateDao templateDao, DataFieldDao dataFieldDao, CommunityDao communityDao) {
         this.templateDao = templateDao;
         this.dataFieldDao = dataFieldDao;
-        this.dataFieldTypeDao = dataFieldTypeDao;
+        this.communityDao = communityDao;
     }
 
     @GetMapping("/templateForm")
-    public String templateForm(Model theModel){
+    public String templateForm(@RequestParam("communityId") int id, Model theModel){
         Template theTemplate=new Template();
         theModel.addAttribute("template",theTemplate);
-
+        theModel.addAttribute("communityId",id);
 
         return "template/template-form";
     }
@@ -43,8 +44,10 @@ public class TemplateController {
     @PostMapping("/processTemplate")
     public String processTemplate(@ModelAttribute("template") Template template,
                                   @RequestParam("dataFieldList") String dataFieldListJson,
+                                  @RequestParam("communityId") int id,
                                   Model model)  {
 
+        System.out.println("community id " + id);
         System.out.println(template);
         System.out.println(dataFieldListJson);
 
@@ -57,23 +60,12 @@ public class TemplateController {
             e.printStackTrace();
         }
 
-        // DataField listesini yazdır
-        if (dataFields != null) {
-            for (DataField dataField : dataFields) {
-                String fieldName = dataField.getName();
-                String fieldValue = dataField.getValue();
-                System.out.println("Field Name: " + fieldName + ", Field Value: " + fieldValue);
-            }
-        }
-        System.out.println(template);
-        System.out.println(dataFieldListJson);
+        template.setDataFields(dataFields);
+        templateDao.saveTemplateByCommunityId(template,id);
 
-        // Template ve dataField listesini model'e ekle
-        model.addAttribute("template", template);
-        model.addAttribute("dataFields", dataFields);
 
         // İşlem tamamlandıktan sonra bir başka sayfaya yönlendirme yapabilirsiniz
-        return "redirect:/success";
+        return "redirect:/community/showCommunity?communityId=" + id;
     }
 }
 

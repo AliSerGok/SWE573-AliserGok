@@ -1,52 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Create New Template</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Gerekirse CSS dosyalarını buraya ekleyebilirsiniz -->
+  <title>Geolocation Map Form</title>
+  <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <!-- Form for creating a new template -->
-  <form th:action="@{/template/processTemplate}" method="post" th:object="${template}">
-    <div class="mb-3">
-      <label for="templateName" class="form-label">Template Name</label>
-      <input type="text" id="templateName" class="form-control" th:field="*{name}" placeholder="Enter template name">
-    </div>
-    <!-- DataField section -->
-    <div class="data-fields">
-      <!-- DataField input fields will be added dynamically here -->
-    </div>
-    <button type="button" class="btn btn-primary" onclick="addDataField()">Add DataField</button>
-    <!-- Submit button -->
-    <button type="submit" class="btn btn-primary">Create Template</button>
-  </form>
-</div>
+<h2>Geolocation Map Form</h2>
+<div id="map"></div>
+<form id="locationForm">
+  <label for="location">Selected Location:</label><br>
+  <input type="text" id="location" name="location" readonly><br><br>
+  <input type="submit" value="Submit">
+</form>
 
-<!-- DataField Type options -->
-<select id="dataFieldTypeOptions" style="display: none;">
-  <option th:each="type : ${dataFieldTypes}" th:value="${type.id}" th:text="${type.type}"></option>
-</select>
+<script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 40.7128, lng: -74.0060}, // New York City default olarak
+                zoom: 12
+            });
 
-<script th:inline="javascript">
-    function addDataField() {
-        var dataFieldIndex = document.querySelectorAll('.data-field').length;
-        var dataFieldTypeOptions = document.getElementById('dataFieldTypeOptions').innerHTML;
-        var newFieldHtml = `
-            <div class="mb-3 data-field">
-                <label for="fieldName${dataFieldIndex}" class="form-label">Field Name</label>
-                <input type="text" id="fieldName${dataFieldIndex}" class="form-control" th:field="*{dataFields[__${dataFieldIndex}__].name}" placeholder="Enter field name">
-                <label for="fieldType${dataFieldIndex}" class="form-label">Field Type</label>
-                <select id="fieldType${dataFieldIndex}" class="form-control" th:field="*{dataFields[__${dataFieldIndex}__].dataFieldType.id}">
-                    ${dataFieldTypeOptions}
-                </select>
-                <!-- Add other fields as needed -->
-            </div>
-        `;
-        document.querySelector('.data-fields').insertAdjacentHTML('beforeend', newFieldHtml);
-    }
-</script>
+            var marker = new google.maps.Marker({
+                position: {lat: 40.7128, lng: -74.0060},
+                map: map,
+                draggable: true // Kullanıcının konumu sürükleyerek seçmesine izin verir
+            });
 
+            google.maps.event.addListener(marker, 'dragend', function(event) {
+                document.getElementById('location').value = event.latLng.lat() + ', ' + event.latLng.lng();
+            });
+        }
+    </script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
 </body>
 </html>

@@ -22,10 +22,5 @@ public class DataFieldType {
     @Column(name = "type")
     private String type;
 
-    @OneToMany(mappedBy = "dataFieldType",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    private List<DataField> dataField;
 
-    public void addDataField(DataField dataField){
-        this.dataField.add(dataField);
-    }
 }
