@@ -190,8 +190,10 @@ CREATE TABLE `template` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `community_id` INT,
+  `owner_id` INT,
   PRIMARY KEY (`id`),
-  CONSTRAINT `FK_community_id` FOREIGN KEY (`community_id`) REFERENCES `community` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_community_id` FOREIGN KEY (`community_id`) REFERENCES `community` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 INSERT INTO `template` (`name`, `community_id`) VALUES
@@ -221,6 +223,30 @@ CREATE TABLE `post` (
   CONSTRAINT `FK_post_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+INSERT INTO `post` (`title`, `creation_date`, `update_date`, `like`, `dislike`, `community_id`, `user_id`) 
+VALUES 
+('Güneşli bir gün', '2024-05-12', '2024-05-12', 10, 2, 1, 3),
+('Yaz mevsimi ve deniz keyfi', '2024-05-12', '2024-05-12', 15, 3, 2, 5),
+('Bir kitap önerisi: Da Vinci Şifresi', '2024-05-12', '2024-05-12', 20, 5, 3, 2),
+('Kültür ve sanat etkinliği: Resim Sergisi', '2024-05-12', '2024-05-12', 25, 6, 4, 4),
+('Bisikletle şehir turu keyfi', '2024-05-12', '2024-05-12', 30, 8, 5, 1),
+('Yeni keşfedilen bir restoran: Lezzet Durağı', '2024-05-12', '2024-05-12', 12, 1, 1, 4),
+('Doğa yürüyüşü ve kamp keyfi', '2024-05-12', '2024-05-12', 18, 4, 2, 2),
+('Bilim ve teknoloji konferansı: Geleceği Keşfetmek', '2024-05-12', '2024-05-12', 22, 7, 3, 5),
+('Ev yapımı pasta tarifleri', '2024-05-12', '2024-05-12', 27, 9, 4, 3),
+('En sevdiğim film: Yeşil Yol', '2024-05-12', '2024-05-12', 35, 10, 5, 1),
+('Bir hafta sonu kaçamağı: Dağ evi macerası', '2024-05-12', '2024-05-12', 14, 3, 1, 5),
+('Sağlıklı yaşam önerileri', '2024-05-12', '2024-05-12', 17, 4, 2, 3),
+('Gezi ve seyahat ipuçları: Seyahat Rehberi', '2024-05-12', '2024-05-12', 21, 6, 3, 1),
+('Yoga ve meditasyonun faydaları', '2024-05-12', '2024-05-12', 26, 8, 4, 2),
+('Ev dekorasyonu trendleri', '2024-05-13', '2024-05-13', 32, 11, 5, 4),
+('Birçok dilde selam: Merhaba, Bonjour, Hello', '2024-05-13', '2024-05-13', 8, 2, 1, 1),
+('Tarihi ve kültürel miras: Antik Kentler Turu', '2024-05-13', '2024-05-13', 23, 7, 2, 4),
+('Klasik müzik ziyafeti: Beethoven Konseri', '2024-05-13', '2024-05-13', 28, 9, 3, 3),
+('Dünya mutfağı lezzetleri: Gastronomi Festivali', '2024-05-13', '2024-05-13', 31, 10, 4, 5),
+('Spor ve egzersiz önerileri', '2024-05-13', '2024-05-13', 16, 5, 5, 2);
+
+
 
 DROP TABLE IF EXISTS `data_field_type`;
 CREATE TABLE `data_field_type` (
@@ -235,27 +261,28 @@ DROP TABLE IF EXISTS `data_field`;
 CREATE TABLE `data_field` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `description` VARCHAR(255),
+  `input_value` VARCHAR(255),
   `is_required` BOOLEAN NOT NULL DEFAULT FALSE,
   `post_id` INT,
-  `data_field_type_id` INT,
+  `value` VARCHAR(15),
   `template_id` INT,
   PRIMARY KEY (`id`),
-  CONSTRAINT `FK_data_field_type_id` FOREIGN KEY (`data_field_type_id`) REFERENCES `data_field_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_post_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_template_id` FOREIGN KEY (`template_id`) REFERENCES `template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-INSERT INTO `data_field` (`name`, `is_required`, `data_field_type_id`, `template_id`) VALUES
-('Event Date', TRUE, 1, 1), ('Location', TRUE, 4, 1), ('Description', TRUE, 1, 1), ('Event Image', FALSE, 2, 1),
-('Topic', TRUE, 1, 2), ('Content', TRUE, 1, 2), ('Tags', FALSE, 1, 2), ('Attachment', FALSE, 2, 2),
-('Headline', TRUE, 1, 3), ('Article', TRUE, 1, 3), ('Source', TRUE, 1, 3), ('Thumbnail', FALSE, 2, 3),
-('Dish Name', TRUE, 1, 4), ('Recipe', TRUE, 1, 4), ('Ingredients', TRUE, 1, 4), ('Image', FALSE, 2, 4),
-('Issue', TRUE, 1, 5), ('Description', TRUE, 1, 5), ('Screenshot', FALSE, 2, 5), ('Priority', FALSE, 1, 5),
-('Destination', TRUE, 1, 6), ('Travel Date', TRUE, 1, 6), ('Experience', TRUE, 1, 6), ('Photo', FALSE, 2, 6),
-('Photo Title', TRUE, 1, 7), ('Description', TRUE, 1, 7), ('Camera Used', FALSE, 1, 7), ('Image', FALSE, 2, 7),
-('Title', TRUE, 1, 8), ('Content', TRUE, 1, 8), ('Genre', TRUE, 1, 8), ('Cover Image', FALSE, 2, 8),
-('Tip Title', TRUE, 1, 9), ('Description', TRUE, 1, 9), ('Category', TRUE, 1, 9), ('Video', FALSE, 3, 9),
-('Movie Title', TRUE, 1, 10), ('Review', TRUE, 1, 10), ('Rating', TRUE, 1, 10), ('Poster', FALSE, 2, 10);
+INSERT INTO `data_field` (`name`, `is_required`, `input_value`, `value`, `template_id`, `post_id`) VALUES
+('Event Date', TRUE, '2024-05-20', 'text', 1, 1), ('Location', TRUE, 'New York', 'text', 1, 1), ('Description', TRUE, 'Lorem ipsum dolor sit amet', 'text', 1, 1), ('Event Image', FALSE, 'event.jpg', 'image', 1, 1),
+('Topic', TRUE, 'Technology', 'text', 2, 2), ('Content', TRUE, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', 'text', 2, 2), ('Tags', FALSE, 'tech, innovation', 'text', 2, 2), ('Thumbnail', FALSE, 'thumbnail.jpg', 'image', 2, 2),
+('Headline', TRUE, 'Breaking News', 'text', 3, 3), ('Article', TRUE, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', 'text', 3, 3), ('Source', TRUE, 'CNN', 'text', 3, 3), ('Thumbnail', FALSE, 'thumbnail.jpg', 'image', 3, 3),
+('Dish Name', TRUE, 'Spaghetti Carbonara', 'text', 4, 4), ('Recipe', TRUE, 'Ingredients: spaghetti, eggs, bacon, parmesan cheese', 'text', 4, 4), ('Ingredients', TRUE, 'spaghetti, eggs, bacon, parmesan cheese', 'text', 4, 4), ('Image', FALSE, 'spaghetti.jpg', 'image', 4, 4),
+('Issue', TRUE, 'Bug in software', 'text', 5, 5), ('Description', TRUE, 'The software crashes when the user tries to save the file', 'text', 5, 5), ('Screenshot', FALSE, 'screenshot.jpg', 'image', 5, 5), ('Priority', FALSE, 'High', 'text', 5, 5),
+('Destination', TRUE, 'Paris', 'text', 6, 6), ('Travel Date', TRUE, '2024-07-10', 'text', 6, 6), ('Experience', TRUE, 'Wonderful trip, enjoyed the Eiffel Tower', 'text', 6, 6), ('Photo', FALSE, 'eiffel.jpg', 'image', 6, 6),
+('Photo Title', TRUE, 'Sunset', 'text', 7, 7), ('Description', TRUE, 'Beautiful sunset over the ocean', 'text', 7, 7), ('Camera Used', FALSE, 'Canon EOS 5D Mark IV', 'text', 7, 7), ('Image', FALSE, 'sunset.jpg', 'image', 7, 7),
+('Title', TRUE, 'The Great Gatsby', 'text', 8, 8), ('Content', TRUE, 'A novel by F. Scott Fitzgerald', 'text', 8, 8), ('Genre', TRUE, 'Fiction', 'text', 8, 8), ('Cover Image', FALSE, 'gatsby.jpg', 'image', 8, 8),
+('Tip Title', TRUE, 'Cooking Tip', 'text', 9, 9), ('Description', TRUE, 'Always preheat the oven before baking', 'text', 9, 9), ('Category', TRUE, 'Food', 'text', 9, 9), ('Poster', FALSE, 'cookingtip.jpg', 'image', 9, 9),
+('Movie Title', TRUE, 'Inception', 'text', 10, 10), ('Review', TRUE, 'Mind-bending thriller directed by Christopher Nolan', 'text', 10, 10), ('Rating', TRUE, '9.5', 'decimal', 10, 10), ('Audio File', FALSE, 'inception.mp3', 'audio', 10, 10);
+
+
 
 
 
