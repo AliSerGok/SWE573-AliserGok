@@ -60,9 +60,8 @@ public class TemplateController {
             e.printStackTrace();
         }
 
-        template.setDataFields(dataFields);
-        templateDao.saveTemplateByCommunityId(template,id);
 
+        templateDao.saveTemplateByCommunityId(template,id,dataFields);
 
         // İşlem tamamlandıktan sonra bir başka sayfaya yönlendirme yapabilirsiniz
         return "redirect:/community/showCommunity?communityId=" + id;

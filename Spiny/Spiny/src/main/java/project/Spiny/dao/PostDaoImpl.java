@@ -21,9 +21,8 @@ public class PostDaoImpl implements PostDao{
         Post post=new Post();
         if(template!=null){
             post.setCommunity(template.getCommunity());
-            return new Post(template);
         }
-       return new Post();
+        return new Post(template);
     }
 
     @Override

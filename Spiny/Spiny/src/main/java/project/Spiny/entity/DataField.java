@@ -1,9 +1,7 @@
 package project.Spiny.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -30,13 +28,16 @@ public class DataField {
     @Column(name = "value")
     private String value;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "template_id")
     private Template template;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(name = "post_data_field",
+            joinColumns = @JoinColumn(name = "data_field_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
+    )
+    private List<Post> posts;
 
 
 }

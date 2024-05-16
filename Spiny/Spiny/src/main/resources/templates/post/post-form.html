@@ -10,20 +10,21 @@
     <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
 </div>
 
-<div>
-    <form action="#" th:action="@{/post/processPostForm}" th:object="${post}" method="post">
-
+<div >
+    <form th:action="@{/post/processPostForm}" th:object="${post}" method="post">
         Name: <span th:text="${post.title}"></span><br><br>
 
         <ul>
-            <li th:each="tempDataField : ${post.dataFields}">
-                <span th:text="${tempDataField.name}"></span><br><br>
-                <!--<input type="text" th:field="*{tempDataField.description}"/>-->
+            <li th:each="dataField, fieldIndex : ${post.dataFields}">
+                <span th:text="${dataField.name}"></span><br><br>
+                <input type="hidden" th:value="${dataField.id}">
+                <input type="text" th:field="*{dataFields[__${fieldIndex.index}__].inputValue}"/>
             </li>
         </ul>
         <button type="submit">Create</button>
-
     </form>
+
+
 </div>
 
 </body>

@@ -7,8 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import project.Spiny.entity.Community;
+import project.Spiny.entity.DataField;
 import project.Spiny.entity.Template;
 import project.Spiny.entity.User;
+
+import java.util.List;
 
 @Repository
 public class TemplateDaoImpl implements TemplateDao{
@@ -23,7 +26,7 @@ public class TemplateDaoImpl implements TemplateDao{
 
     @Override
     @Transactional
-    public void saveTemplateByCommunityId(Template template, int communityId) {
+    public void saveTemplateByCommunityId(Template template, int communityId, List<DataField> dataFields) {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         String userName=authentication.getName();
 
@@ -32,6 +35,17 @@ public class TemplateDaoImpl implements TemplateDao{
 
         template.setOwner(user);
         template.setCommunity(community);
+
+        for (DataField d: dataFields){
+            d.setTemplate(template);
+        }
+        template.setDataFields(dataFields);
         entityManager.persist(template);
+
+    }
+
+    @Override
+    public Template getTemplateById(int id) {
+        return entityManager.find(Template.class,id);
     }
 }

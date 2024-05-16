@@ -282,7 +282,24 @@ INSERT INTO `data_field` (`name`, `is_required`, `input_value`, `value`, `templa
 ('Tip Title', TRUE, 'Cooking Tip', 'text', 9, 9), ('Description', TRUE, 'Always preheat the oven before baking', 'text', 9, 9), ('Category', TRUE, 'Food', 'text', 9, 9), ('Poster', FALSE, 'cookingtip.jpg', 'image', 9, 9),
 ('Movie Title', TRUE, 'Inception', 'text', 10, 10), ('Review', TRUE, 'Mind-bending thriller directed by Christopher Nolan', 'text', 10, 10), ('Rating', TRUE, '9.5', 'decimal', 10, 10), ('Audio File', FALSE, 'inception.mp3', 'audio', 10, 10);
 
+DROP TABLE IF EXISTS `post_data_field`;
 
+CREATE TABLE `post_data_field` (
+  `post_id` int(11) NOT NULL,
+  `data_field_id` int(11) NOT NULL,
+  
+  PRIMARY KEY (`post_id`,`data_field_id`),
+  
+  KEY `FK_POST_idx` (`post_id`),
+  
+  CONSTRAINT `FK_POST_05` FOREIGN KEY (`post_id`) 
+  REFERENCES `post` (`id`) 
+  ON DELETE NO ACTION ON UPDATE NO ACTION,
+  
+  CONSTRAINT `FK_Datafield` FOREIGN KEY (`data_field_id`) 
+  REFERENCES `data_field` (`id`) 
+  ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 

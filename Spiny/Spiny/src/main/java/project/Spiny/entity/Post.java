@@ -25,7 +25,11 @@ public class Post {
     @Column(name = "title")
     private String title;
 
-    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(name = "post_data_field",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "data_field_id")
+    )
     private List<DataField> dataFields=new ArrayList<>();
 
     public Post() {
