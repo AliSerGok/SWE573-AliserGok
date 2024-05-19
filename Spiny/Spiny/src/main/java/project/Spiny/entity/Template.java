@@ -25,6 +25,9 @@ public class Template {
     @OneToMany(mappedBy = "template",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<DataField> dataFields;
 
+    @OneToMany(mappedBy = "template",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<Post> posts;
+
     @ManyToOne
     @JoinColumn(name = "community_id")
     private Community community;

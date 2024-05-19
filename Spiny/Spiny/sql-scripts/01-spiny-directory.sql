@@ -214,8 +214,8 @@ CREATE TABLE `post` (
   `title` VARCHAR(255),
   `creation_date` DATETIME,
   `update_date` DATETIME,
-  `like` INT,
-  `dislike` INT,
+  `like_post` INT,
+  `dislike_post` INT,
   `community_id` INT,
   `user_id` INT,
   PRIMARY KEY (`id`),
@@ -223,7 +223,7 @@ CREATE TABLE `post` (
   CONSTRAINT `FK_post_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-INSERT INTO `post` (`title`, `creation_date`, `update_date`, `like`, `dislike`, `community_id`, `user_id`) 
+INSERT INTO `post` (`title`, `creation_date`, `update_date`, `like_post`, `dislike_post`, `community_id`, `user_id`) 
 VALUES 
 ('Güneşli bir gün', '2024-05-12', '2024-05-12', 10, 2, 1, 3),
 ('Yaz mevsimi ve deniz keyfi', '2024-05-12', '2024-05-12', 15, 3, 2, 5),
@@ -246,16 +246,6 @@ VALUES
 ('Dünya mutfağı lezzetleri: Gastronomi Festivali', '2024-05-13', '2024-05-13', 31, 10, 4, 5),
 ('Spor ve egzersiz önerileri', '2024-05-13', '2024-05-13', 16, 5, 5, 2);
 
-
-
-DROP TABLE IF EXISTS `data_field_type`;
-CREATE TABLE `data_field_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`)
-  
-);
-INSERT INTO `data_field_type` (`type`) VALUES ('text'),('image'),('video'),('geolocation');
 
 DROP TABLE IF EXISTS `data_field`;
 CREATE TABLE `data_field` (
@@ -282,24 +272,9 @@ INSERT INTO `data_field` (`name`, `is_required`, `input_value`, `value`, `templa
 ('Tip Title', TRUE, 'Cooking Tip', 'text', 9, 9), ('Description', TRUE, 'Always preheat the oven before baking', 'text', 9, 9), ('Category', TRUE, 'Food', 'text', 9, 9), ('Poster', FALSE, 'cookingtip.jpg', 'image', 9, 9),
 ('Movie Title', TRUE, 'Inception', 'text', 10, 10), ('Review', TRUE, 'Mind-bending thriller directed by Christopher Nolan', 'text', 10, 10), ('Rating', TRUE, '9.5', 'decimal', 10, 10), ('Audio File', FALSE, 'inception.mp3', 'audio', 10, 10);
 
-DROP TABLE IF EXISTS `post_data_field`;
 
-CREATE TABLE `post_data_field` (
-  `post_id` int(11) NOT NULL,
-  `data_field_id` int(11) NOT NULL,
-  
-  PRIMARY KEY (`post_id`,`data_field_id`),
-  
-  KEY `FK_POST_idx` (`post_id`),
-  
-  CONSTRAINT `FK_POST_05` FOREIGN KEY (`post_id`) 
-  REFERENCES `post` (`id`) 
-  ON DELETE NO ACTION ON UPDATE NO ACTION,
-  
-  CONSTRAINT `FK_Datafield` FOREIGN KEY (`data_field_id`) 
-  REFERENCES `data_field` (`id`) 
-  ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 
 
 

@@ -8,13 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import project.Spiny.dao.CommunityDao;
 import project.Spiny.dao.DataFieldDao;
-import project.Spiny.dao.DataFieldTypeDao;
 import project.Spiny.dao.TemplateDao;
 import project.Spiny.entity.DataField;
 import project.Spiny.entity.Template;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -63,7 +61,6 @@ public class TemplateController {
 
         templateDao.saveTemplateByCommunityId(template,id,dataFields);
 
-        // İşlem tamamlandıktan sonra bir başka sayfaya yönlendirme yapabilirsiniz
         return "redirect:/community/showCommunity?communityId=" + id;
     }
 }

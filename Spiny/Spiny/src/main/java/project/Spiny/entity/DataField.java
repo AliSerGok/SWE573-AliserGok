@@ -32,12 +32,27 @@ public class DataField {
     @JoinColumn(name = "template_id")
     private Template template;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name = "post_data_field",
-            joinColumns = @JoinColumn(name = "data_field_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id")
-    )
-    private List<Post> posts;
+   /* @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "postTemp")
+    private Template postTemplate;
 
+    */
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    public void setInputValue(String inputValue) {
+        this.inputValue = inputValue;
+    }
+
+    @Override
+    public String toString() {
+        return "DataField{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isRequired=" + isRequired +
+                ", inputValue='" + inputValue + '\'' +
+                ", value='" + value;
+    }
 }

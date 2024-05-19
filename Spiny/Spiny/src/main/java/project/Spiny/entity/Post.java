@@ -25,12 +25,12 @@ public class Post {
     @Column(name = "title")
     private String title;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name = "post_data_field",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "data_field_id")
-    )
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post",cascade = CascadeType.ALL)
     private List<DataField> dataFields=new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "template_id")
+    private Template template;
 
     public Post() {
         DataField dataFieldContent=new DataField();
@@ -44,15 +44,15 @@ public class Post {
     }
 
     @Column(name = "creation_date")
-    private LocalDateTime CreationDate;
+    private LocalDateTime creationDate;
 
     @Column(name="update_date")
-    private LocalDateTime UpdateDate;
+    private LocalDateTime updateDate;
 
-    @Column(name = "like")
+    @Column(name = "like_post")
     private int like;
 
-    @Column(name = "dislike")
+    @Column(name = "dislike_post")
     private int dislike;
 
 

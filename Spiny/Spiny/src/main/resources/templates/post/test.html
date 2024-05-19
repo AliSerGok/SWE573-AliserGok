@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <style>
+        .required-label::before {
+            content: "*";
+            color: red;
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        label {
+            vertical-align: middle;
+        }
+        .container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h2 th:text="'Create a New Post for ' + ${communityName}"></h2>
+<div th:if="${selectDropdownList}">
+    <label for="template_selector">Select Template:</label>
+    <select id="template_selector" onchange="document.getElementById('template_form').submit()">
+        <option value="empty">-Please Select Template-</option>
+        <option value="Default Template">Default Template</option>
+        <option th:each="template : ${templates}" th:value="${template}" th:text="${template}"></option>
+    </select>
+
+    <!-- Hidden form to send the POST request -->
+    <form id="template_form" method="post" th:action="@{/display_community_specific_template_post}" style="display: none;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+        <input type="hidden" id="selected_template" name="selected_template"/>
+        <input type="hidden" name="community_name" th:value="${communityName}"/>
+    </form>
+</div>
+
+<div th:unless="${selectDropdownList}" class="container">
+    <form id="post_form" method="post" th:action="@{/post/processPostForm}">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+        <input type="hidden" name="template_name" th:value="${templateName}"/>
+        <input type="hidden" name="community_name" th:value="${communityName}"/>
+
+        <div th:each="dataField, fieldIndex : ${dataFields}" class="text-box-pair">
+            <label th:text="${dataField.name} + ':'"></label>
+            <input type="hidden" th:name="dataFields[__${fieldIndex.index}__].id" th:value="${dataField.id}"/>
+            <input type="text" th:name="dataFields[__${fieldIndex.index}__].inputValue" th:value="${dataField.inputValue}" class="form-control"/>
+        </div>
+
+        <br><br>
+        <button type="submit">Create Post</button>
+        <button type="button" onclick="window.location.href='/community_home?community_name=' + /*[[${communityName}]]*/ ''" style="margin-left: 10px;">Cancel</button>
+    </form>
+</div>
+</body>
+</html>

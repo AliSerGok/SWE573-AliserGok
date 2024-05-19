@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Advance Search</title>
+  <title>Search</title>
   <script>
     function showDateField1() {
         var postDateDiv = document.getElementById("postDateDiv");
@@ -20,7 +20,7 @@
   </script>
 </head>
 <body>
-<h2>Advance Search</h2>
+<h2>Search</h2>
 <form th:action="@{/search/processSearchForm}" th:object="${search}" method="post">
   <label for="keyword">Keyword:</label>
   <input type="text" id="keyword" th:field="*{keyword}">

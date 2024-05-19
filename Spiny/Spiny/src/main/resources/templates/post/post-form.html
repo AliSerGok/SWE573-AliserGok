@@ -7,25 +7,33 @@
 </head>
 <body>
 <div th:if="${session.user}">
-    <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
+    <p th:text="'Name: ' + ${session.user.firstName} + ', surname: ' + ${session.user.lastName} + ', email: ' + ${session.user.email}"></p>
 </div>
 
-<div >
-    <form th:action="@{/post/processPostForm}" th:object="${post}" method="post">
-        Name: <span th:text="${post.title}"></span><br><br>
+<div>
+    <form th:action="@{/post/processPostForm}" method="post">
+        Template name: <span th:text="${post.title}"></span><br>
+        <input type="hidden" name="communityId" th:value="${post.community.id}">
 
-        <ul>
-            <li th:each="dataField, fieldIndex : ${post.dataFields}">
-                <span th:text="${dataField.name}"></span><br><br>
-                <input type="hidden" th:value="${dataField.id}">
-                <input type="text" th:field="*{dataFields[__${fieldIndex.index}__].inputValue}"/>
-            </li>
-        </ul>
-        <button type="submit">Create</button>
+
+        <div th:each="field, fieldIndex : ${DataFields}">
+            <div class="form-group">
+
+                <label th:text="${field.name}"></label>
+                <input type="hidden" th:name="id.__${fieldIndex.index}__" th:value="${field.id}"/>
+                <input type="text" th:name="value.__${fieldIndex.index}__" th:value="${field.inputValue}"/>
+
+
+            </div>
+        </div>
+
+        <!-- Submit button -->
+        <div class="form-group">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
     </form>
-
-
 </div>
-
 </body>
 </html>
