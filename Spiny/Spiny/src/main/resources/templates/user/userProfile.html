@@ -12,6 +12,10 @@
 <div th:if="${session.user.userName} == ${UserProfile.user.userName}">
     <a th:href="@{/user/updateUserProfileForm(UserProfileId=${UserProfile.id})}">Update Your Profile</a>
 </div>
+<div sec:authorize="hasRole('USER')">
+    <a th:href="@{/}">Home Page</a>
+
+</div><br>
 
 <div>
     <form action="#"  th:object="${UserProfile}" >

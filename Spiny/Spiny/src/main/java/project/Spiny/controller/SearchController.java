@@ -61,6 +61,7 @@ public class SearchController {
             model.addAttribute("postsFound",posts);
             System.out.println(posts);
         }
+        model.addAttribute("communityId",communityId);
 
 
         return "search/community-search-results";

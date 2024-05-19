@@ -7,7 +7,12 @@
 </head>
 <body>
 <h2>Search Results</h2>
-<div>
+<div sec:authorize="hasRole('USER')">
+    <a th:href="@{/}">Back to Home page</a>
+
+</div><br>
+
+<div th:if="${communitiesFound != null}">
 <table class="table table-bordered table-striped">
     <h3>Community Results</h3>
     <thead class="table-dark">
@@ -37,7 +42,7 @@
 </table>
 </div>
 
-<div>
+<div th:if="${peopleFound != null}">
     <table class="table table-bordered table-striped">
         <h3>People Results</h3>
         <thead class="table-dark">
@@ -62,13 +67,6 @@
             </td>
         </tr>
         </tbody>
-    </table>
-</div>
-
-<div>
-    <table class="table table-bordered table-striped">
-        <h3>Post Results</h3>
-
     </table>
 </div>
 

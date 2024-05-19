@@ -5,7 +5,15 @@
   <meta charset="UTF-8">
   <title>Community Search Results</title>
 </head>
+
+
 <body>
+<div >
+  <a th:href="@{/community/showCommunity(communityId=${communityId})}">Back to Community</a>
+
+</div>
+
+
 <h2>Community Search Results</h2>
 <div th:if="${postsFound != null}">
   <h2>Posts:</h2>
@@ -56,7 +64,7 @@
       <td th:text="${tempUser.userName}"></td>
       <td>
         <div sec:authorize="hasRole('USER')">
-          <a th:href="@{/user/showProfile(userId=${tempUser.id})}">View</a>
+          <a th:href="@{/user/showProfile(userId=${tempUser.userProfile.id})}">View</a>
 
         </div>
       </td>
