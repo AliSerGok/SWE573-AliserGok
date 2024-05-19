@@ -6,10 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import project.Spiny.entity.DataField;
-import project.Spiny.entity.Post;
-import project.Spiny.entity.Template;
-import project.Spiny.entity.User;
+import project.Spiny.entity.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,6 +75,38 @@ public class PostDaoImpl implements PostDao{
         entityManager.persist(post);
 
 
+    }
+
+    @Override
+    @Transactional
+    public void savePostbyDefaultDatafields(List<DataField> dataFields,int id) {
+        List<DataField> dataFieldsNew=new ArrayList<>();
+        Post post=new Post();
+
+
+        post.setTitle("Community Default Post");
+        Community community=entityManager.find(Community.class,id);
+        post.setCommunity(community);
+
+        for (DataField n: dataFields){
+
+            DataField d=new DataField();
+
+            d.setName(n.getName());
+            d.setInputValue(n.getInputValue());
+            d.setRequired(true);
+            d.setValue("text");
+            d.setPost(post);
+            dataFieldsNew.add(d);
+        }
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String userName=authentication.getName();
+        User user=userDao.findByUserName(userName);
+        post.setUser(user);
+        post.setDataFields(dataFieldsNew);
+        post.setCreationDate(LocalDateTime.now());
+
+        entityManager.persist(post);
     }
 
     @Override

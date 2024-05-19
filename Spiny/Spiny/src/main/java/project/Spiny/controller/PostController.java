@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import project.Spiny.dao.CommunityDao;
 import project.Spiny.dao.PostDao;
 import project.Spiny.dao.TemplateDao;
+import project.Spiny.entity.Community;
 import project.Spiny.entity.DataField;
 import project.Spiny.entity.Post;
 import project.Spiny.entity.Template;
@@ -20,11 +22,13 @@ import java.util.Map;
 public class PostController {
     private PostDao postDao;
     private TemplateDao templateDao;
+    private CommunityDao communityDao;
 
     @Autowired
-    public PostController(PostDao postDao, TemplateDao templateDao) {
+    public PostController(PostDao postDao, TemplateDao templateDao, CommunityDao communityDao) {
         this.postDao = postDao;
         this.templateDao=templateDao;
+        this.communityDao=communityDao;
     }
 
     @GetMapping("/showPostForm")
@@ -43,8 +47,22 @@ public class PostController {
         return "post/post-form";
     }
 
+    @GetMapping("/showDefaultPostForm")
+    public String showDefaultPostForm(@RequestParam("communityId") int id, Model theModel){
+        Post thePost=new Post();
+
+        List<DataField> dataFields=thePost.getDataFields();
+        System.out.println(dataFields);
+        Community community=communityDao.getCommunityById(id);
+        thePost.setCommunity(community);
+
+        theModel.addAttribute("post", thePost);
+        theModel.addAttribute("DataFields",dataFields);
+        return "post/default-post-form";
+    }
+
     @PostMapping("/processPostForm")
-    public String savePost(@RequestBody MultiValueMap<String,String> formdata,@RequestParam("communityId")int communityId) {
+    public String savePost(@RequestBody MultiValueMap<String,String> formdata, @RequestParam("communityId") int communityId) {
 
         List<DataField> dataFields=new ArrayList<>();
 
@@ -60,6 +78,25 @@ public class PostController {
         }
         System.out.println(dataFields);
         postDao.savePostbyDatafields(dataFields);
+        return "redirect:/community/showCommunity?communityId=" + communityId;
+    }
+
+    @PostMapping("/processDefaultPostForm")
+    public String processDefaultPostForm(@RequestBody MultiValueMap<String,String> formdata, @RequestParam("communityId") int communityId) {
+
+        List<DataField> dataFields=new ArrayList<>();
+
+        int index = 0;
+        while (formdata.containsKey("id." + index) && formdata.containsKey("value." + index)) {
+            DataField newDataField=new DataField();
+            newDataField.setName("Content");
+            String dfvalue = formdata.getFirst("value." + index);
+            newDataField.setInputValue(dfvalue);
+            dataFields.add(newDataField);
+            index++;
+        }
+        System.out.println(dataFields);
+        postDao.savePostbyDefaultDatafields(dataFields,communityId);
         return "redirect:/community/showCommunity?communityId=" + communityId;
     }
 

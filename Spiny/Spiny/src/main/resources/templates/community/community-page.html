@@ -25,6 +25,10 @@
   <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
   <p th:text="'user name: ' + ${session.user.userName}"></p>
 </div>
+<div sec:authorize="hasRole('USER')">
+  <a th:href="@{/}">Home page</a>
+
+</div><br>
 
 <div th:if="${session.user.userName} == ${community.owner.userName}">
   <a th:href="@{/community/updateCommunityPage(communityId=${community.id})}">Update Your Community</a>
@@ -98,6 +102,7 @@
     <div>
       <h2>Templates:</h2>
       <form action="#" th:object="${community}">
+        Default Post Template <a th:href="@{/post/showDefaultPostForm(communityId=${community.id})}">Select</a>
         <table>
           <tr th:each="template : ${community.templates}">
             <td>

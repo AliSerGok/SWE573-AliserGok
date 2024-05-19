@@ -34,7 +34,9 @@ public class Post {
 
     public Post() {
         DataField dataFieldContent=new DataField();
+        this.title="Community Default Post";
         dataFieldContent.setName("Content");
+        dataFieldContent.setInputValue("Write your message");
         dataFields.add(dataFieldContent);
     }
 

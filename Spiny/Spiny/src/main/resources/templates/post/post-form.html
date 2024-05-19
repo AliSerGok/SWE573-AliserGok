@@ -9,7 +9,7 @@
 <div th:if="${session.user}">
     <p th:text="'Name: ' + ${session.user.firstName} + ', surname: ' + ${session.user.lastName} + ', email: ' + ${session.user.email}"></p>
 </div>
-
+<h2>Create post</h2>
 <div>
     <form th:action="@{/post/processPostForm}" method="post">
         Template name: <span th:text="${post.title}"></span><br>
