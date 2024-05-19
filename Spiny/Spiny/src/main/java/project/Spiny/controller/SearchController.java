@@ -45,6 +45,24 @@ public class SearchController {
         return "search/search-results-form";
     }
 
+    @PostMapping("/processCommunitySearchForm")
+    public String processCommunitySearchForm(@ModelAttribute("search") Search search,
+                                             @RequestParam("communityId")int communityId,
+                                             Model model){
+        System.out.println("successes");
+        System.out.println(communityId);
+
+        if(search!=null && search.getSearchInPeople()){
+            List<User> people=searchDao.getUsersByKeySearch(search,communityId);
+            model.addAttribute("peopleFound",people);
+        }
+        if(search!=null && search.getSearchInPosts()){
+            List<Post> posts=searchDao.getPostsByKeySearch(search,communityId);
+            model.addAttribute("postsFound",posts);
+        }
+
+        return "search/community-search-results";
+    }
 
 
 

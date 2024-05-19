@@ -12,6 +12,8 @@ public class Search {
     private Boolean searchInCommunity;
     private Boolean searchInPeople;
     private Boolean searchInPosts;
+    private Boolean searchWithTemplates;
+    private int templateId;
 
     private Boolean inDescriptions;
     private String postDate;

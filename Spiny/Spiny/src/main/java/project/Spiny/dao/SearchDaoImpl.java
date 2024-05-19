@@ -67,7 +67,32 @@ public class SearchDaoImpl implements SearchDao {
     }
 
     @Override
+    public List<User> getUsersByKeySearch(Search search, int id) {
+        if(search == null || search.getKeyword() == null){
+            return Collections.emptyList();
+        }
+        String keyWord=search.getKeyword();
+        List<User> userFoundList=new ArrayList<>();
+        if(search.getSearchInPeople()){
+            TypedQuery<User> theQuery=entityManager.createQuery("SELECT DISTINCT u FROM User u " +
+                    "JOIN u.followedCommunities c " + // Assuming 'communities' is the name of the collection in User entity representing the communities they follow
+                    "WHERE u.userName LIKE CONCAT('%', :keyword, '%') " +
+                    "AND c.id = :communityId", User.class);
+            theQuery.setParameter("keyword",keyWord);
+            theQuery.setParameter("communityId", id);
+            userFoundList=theQuery.getResultList();
+
+        }
+        return userFoundList;
+    }
+
+    @Override
     public List<Post> getPostsByKeySearch(Search search) {
+        return null;
+    }
+
+    @Override
+    public List<Post> getPostsByKeySearch(Search search, int id) {
         return null;
     }
 }

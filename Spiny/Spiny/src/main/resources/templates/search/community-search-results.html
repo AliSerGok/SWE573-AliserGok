@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Search Results</title>
+</head>
+<body>
+<h2>Community Search Results</h2>
+
+<div>
+  <table class="table table-bordered table-striped">
+    <h3>People Results</h3>
+    <thead class="table-dark">
+    <tr>
+      <th>User Name</th>
+      <div sec:authorize="hasRole('USER')">
+        <th>  View  </th>
+      </div>
+
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="tempUser : ${peopleFound}">
+
+      <td th:text="${tempUser.userName}"></td>
+      <td>
+        <div sec:authorize="hasRole('USER')">
+          <a th:href="@{/user/showProfile(userId=${tempUser.id})}">View</a>
+
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <table class="table table-bordered table-striped">
+    <h3>Post Results</h3>
+
+  </table>
+</div>
+
+</body>
+</html>

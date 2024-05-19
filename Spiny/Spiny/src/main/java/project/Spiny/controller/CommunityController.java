@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import project.Spiny.dao.CommunityDao;
 import project.Spiny.entity.Community;
+import project.Spiny.entity.Search;
 
 import java.util.List;
 
@@ -50,8 +51,10 @@ public class CommunityController {
     @GetMapping("/showCommunity")
     public String showCommunity(@RequestParam("communityId") int theId,Model theModel){
         Community community=communityDao.getCommunityById(theId);
+        Search search=new Search();
         if(community!=null){
             theModel.addAttribute("community", community);
+            theModel.addAttribute("search", search);
             return "community/community-page";
         }
         return "exceptions/access-denied";
