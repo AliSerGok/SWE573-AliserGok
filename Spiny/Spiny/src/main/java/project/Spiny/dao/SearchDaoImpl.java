@@ -87,12 +87,41 @@ public class SearchDaoImpl implements SearchDao {
     }
 
     @Override
+    public List<Post> getPostsByKeySearch(Search search, int id) {
+        if(search == null || search.getKeyword() == null){
+            System.out.println("null");
+            return Collections.emptyList();
+        }
+        String keyWord=search.getKeyword();
+        System.out.println(keyWord);
+        List<Post> postsFoundList=new ArrayList<>();
+        if(search.getSearchInPosts() && !search.getSearchWithTemplates()){
+            TypedQuery<Post> theQuery=entityManager.createQuery("SELECT DISTINCT p FROM Post p " +
+                    "WHERE p.title LIKE CONCAT('%', :keyword, '%') " +
+                    "AND p.community.id = :communityId", Post.class);
+            theQuery.setParameter("keyword",keyWord);
+            theQuery.setParameter("communityId", id);
+            postsFoundList=theQuery.getResultList();
+
+        } else if(search.getSearchInPosts() && search.getSearchWithTemplates()){
+            TypedQuery<Post> theQuery=entityManager.createQuery("SELECT DISTINCT p FROM Post p " +
+                    "WHERE p.title LIKE CONCAT('%', :keyword, '%') " +
+                    "AND p.community.id = :communityId "+
+                    "AND p.template.id = :templateId", Post.class);
+            theQuery.setParameter("keyword",keyWord);
+            theQuery.setParameter("communityId", id);
+            theQuery.setParameter("templateId", search.getTemplateId());
+            postsFoundList=theQuery.getResultList();
+        }
+
+        return postsFoundList;
+    }
+
+
+    @Override
     public List<Post> getPostsByKeySearch(Search search) {
         return null;
     }
 
-    @Override
-    public List<Post> getPostsByKeySearch(Search search, int id) {
-        return null;
-    }
+
 }

@@ -71,6 +71,13 @@ public class Post {
         this.dislike+=1;
     }
 
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }
 
 

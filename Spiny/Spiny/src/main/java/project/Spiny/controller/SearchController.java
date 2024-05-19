@@ -59,7 +59,9 @@ public class SearchController {
         if(search!=null && search.getSearchInPosts()){
             List<Post> posts=searchDao.getPostsByKeySearch(search,communityId);
             model.addAttribute("postsFound",posts);
+            System.out.println(posts);
         }
+
 
         return "search/community-search-results";
     }
