@@ -1,104 +1,179 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
-  <title>Create New Template</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Gerekirse CSS dosyalarını buraya ekleyebilirsiniz -->
+  <title>Community Page</title>
+  <script>
+    function showDateField1() {
+        var postDateDiv = document.getElementById("postDateDiv");
+        if (postDateDiv) {
+            postDateDiv.style.display = document.getElementById("searchPosts").checked ? "block" : "none";
+        }
+    }
+    function showDateField2() {
+        var templates = document.getElementById("templates");
+        if (templates) {
+            templates.style.display = document.getElementById("searchWithTemplates").checked ? "block" : "none";
+        }
+    }
+    function showDateField3() {
+        var fields = document.getElementById("fields");
+        if (fields) {
+            fields.style.display = document.getElementById("searchWithDataField").checked ? "block" : "none";
+        }
+    }
+  </script>
 </head>
+
 <body>
-<h1>Create Post Template</h1>
-<form id="templateForm" th:action="@{/template/processTemplate}" method="post" th:object="${template}">
-  <label for="templateName">Template Name:</label>
-  <input type="text" id="templateName" th:field="*{name}" maxlength="100">
+<div th:if="${session.user}" >
+  <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
+  <p th:text="'user name: ' + ${session.user.userName}"></p>
+</div>
+<div sec:authorize="hasRole('USER')">
+  <a th:href="@{/}">Home page</a>
 
-  <div id="dynamicFields"></div>
-  <button type="button" id="addFieldButton">Add Field</button>
-  <button type="submit">Save Template</button>
+</div><br>
 
-  <!-- Hidden input for dataField list -->
-  <input type="hidden" id="dataFieldList" name="dataFieldList">
-</form>
+<div th:if="${session.user.userName} == ${community.owner.userName}">
+  <a th:href="@{/community/updateCommunityPage(communityId=${community.id})}">Update Your Community</a>
+</div>
+
+<div>
+  <h2>Search</h2>
+  <form th:action="@{/search/processCommunitySearchForm}" th:object="${search}" method="post">
+    <label for="keyword">Keyword:</label>
+    <input type="text" id="keyword" th:field="*{keyword}">
+    <input type="hidden" name="communityId" th:value="${community.id}">
+    <br>
+    <label>Search in:</label>
+
+    <div>
+      <input type="checkbox" id="searchCommunities" th:field="*{searchInCommunity}" style="display: none;">
+      <label for="searchCommunities">Communities</label>
+      <div id="communityDescription" style="display: none;">
+        <input type="checkbox" id="ComDescription" th:field="*{inDescriptions}" style="display: none;">
+        <label for="ComDescription">in descriptions</label>
+      </div>
+    </div>
+
+    <div>
+      <input type="checkbox" id="searchPeople" th:field="*{searchInPeople}" onchange="showDateField()">
+      <label for="searchPeople">People</label>
+    </div>
+    <div>
+      <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" onchange="showDateField1()">
+      <label for="searchPosts">Post Title</label>
+    </div>
+    <br>
+    <div id="postDateDiv" style="display: none;">
+      <label for="postDate">Post Date:</label>
+      <input type="date" id="postDate" th:field="*{postDate}">
+    </div>
+    <div>
+      <input type="checkbox" id="searchWithTemplates" th:field="*{searchWithTemplates}" onchange="showDateField2()">
+      <label for="searchWithTemplates">According to Template</label>
+    </div>
+    <div id="templates" style="display: none;">
+      <label for="templates">Select a Template</label>
+      <select th:field="*{templateId}">
+        <option th:each="template : ${community.templates}" th:value="${template.id}" th:text="${template.name}"></option>
+      </select>
+    </div>
+    <div>
+      <input type="checkbox" id="searchWithDataField" th:field="*{searchWithDataField}" onchange="showDateField3()">
+      <label for="searchWithDataField">Data Field Content</label>
+    </div>
+    <div id="fields" style="display: none;">
+      <label for="fields">Select a Template</label>
+      <select th:field="*{fieldName}" id="media-type" name="media-type">
+        <option th:value="'text'" th:text="'Text'"></option>
+        <option th:value="'image'" th:text="'Image'"></option>
+        <option th:value="'video'" th:text="'Video'"></option>
+        <option th:value="'geolocation'" th:text="'Geolocation'"></option>
+        <option th:value="'audio'" th:text="'Audio'"></option>
+      </select>
+      <div>
+        <input type="checkbox" id="allFields" th:field="*{allFields}" >
+        <label for="allFields">All fields</label>
+      </div>
+    </div>
+
+    <br>
+    <input type="submit" value="Search">
+  </form>
+
+  <form action="#"  th:object="${community}" >
+
+    Name: <span th:text="${community.name}"></span><br><br>
+    Description: <span th:text="${community.description}"></span><br><br>
+    <div sec:authorize="hasRole('USER')">
+      <a th:href="@{/community/followCommunity(communityId=${community.id})}">Follow</a>
+
+    </div>
+
+    <br>
+    <div>
+      Followers:
+
+      <tr th:each="follower : ${community.followers}">
+
+        <td th:text="${follower.userName}"></td>
+        <hr>
+    </div>
+    <br>
+    <div>
+      <h2>Templates:</h2>
+      <a th:href="@{/template/templateForm(communityId=${community.id})}">Create new template</a><br>
+      <form action="#" th:object="${community}">
+        Default Post Template <a th:href="@{/post/showDefaultPostForm(communityId=${community.id})}">Select</a>
+        <table>
+          <tr th:each="template : ${community.templates}">
+            <td>
+              <span th:text="${template.name}"></span>
+            </td>
+            <td>
+              <a th:href="@{/post/showPostForm(templateId=${template.id})}">Select</a>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+
+    <br>
+    <div th:if="${community.posts != null}">
+      <h2>Posts:</h2>
+      <table>
+        <tr th:each="post : ${community.posts}" >
+          <td>
+            <h3><span th:text="${post.title}"></span></h3>
+            <div th:if="${post.user != null}">
+              <p>Posted by: <span th:text="${post.getUser().getUserName()}"></span></p>
+            </div>
+            <ul>
+              <li th:each="tempPost : ${post.dataFields}">
+                <p><strong><span th:text="${tempPost.name}"></span>:</strong> <span th:text="${tempPost.inputValue}"></span></p>
+              </li>
+            </ul>
+            <p>Creation Date: <span th:text="${post.creationDate}"></span></p>
+            <form th:action="@{/post/addLike(postId=${post.id})}" method="post" style="display: inline;">
+              <input type="hidden" name="communityId" th:value="${community.id}">
+              <button type="submit" th:text="'like: ' + ${post.like}"></button>
+            </form>
+            <form th:action="@{/post/addDislike(postId=${post.id})}" method="post" style="display: inline;">
+              <input type="hidden" name="communityId" th:value="${community.id}">
+              <button type="submit" th:text="'dislike: ' + ${post.dislike}"></button>
+            </form>
+            <hr>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+  </form>
+</div>
 
 </body>
 </html>
-
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const addButton = document.getElementById('addFieldButton');
-    const container = document.getElementById('dynamicFields');
-    let dropdownCount = 0;
-    let dataFieldList = []; // Empty array to hold dataField objects
-
-    addButton.addEventListener('click', function() {
-        dropdownCount++;
-        const newFieldDiv = document.createElement('div');
-        newFieldDiv.classList.add('field-container');
-
-        const nameLabel = document.createElement('label');
-        nameLabel.textContent = 'Field Name:';
-        newFieldDiv.appendChild(nameLabel);
-
-        const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.setAttribute('id', `nameInput-${dropdownCount}`);
-        nameInput.classList.add('form-control');
-        newFieldDiv.appendChild(nameInput);
-
-        const dropdownLabel = document.createElement('label');
-        dropdownLabel.textContent = 'Select Field:';
-        newFieldDiv.appendChild(dropdownLabel);
-
-        const newDropdown = document.createElement('select');
-        newDropdown.setAttribute('id', `dropdown-${dropdownCount}`);
-        newDropdown.classList.add('form-control');
-
-        // Add options to the dropdown
-        const options = [
-            { value: 'description', label: 'Description' },
-            { value: 'image_url', label: 'Image URL' },
-            { value: 'video_url', label: 'Video URL' },
-            { value: 'geolocation', label: 'Geolocation' },
-            { value: 'date_time_fields', label: 'Date-Time Field' },
-            { value: 'audio_url', label: 'Audio URL' }
-        ];
-        options.forEach(option => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option.value;
-            optionElement.textContent = option.label;
-            newDropdown.appendChild(optionElement);
-        });
-
-        newFieldDiv.appendChild(newDropdown);
-
-        container.appendChild(newFieldDiv);
-
-        // Add dataField object to the array
-        const dataField = {
-            id: dropdownCount,
-            name: nameInput.value,
-            value: newDropdown.value
-        };
-        dataFieldList.push(dataField);
-
-    });
-
-    templateForm.addEventListener('submit', function(e) {
-    for(let i = 1; i <= dropdownCount; i++) {
-        let dropdown = document.getElementById(`dropdown-${i}`);
-        let name = document.getElementById(`nameInput-${i}`);
-        console.log(dropdown);
-        dataFieldList[i-1].value = dropdown.value;
-        dataFieldList[i-1].name = name.value;
-        console.log("df", dataFieldList[i-1]);
-    }
-    const form = document.getElementById('templateForm');
-    // Update hidden input value with JSON array
-    let dfInput = document.getElementById('dataFieldList')
-    document.getElementById('dataFieldList').value = JSON.stringify(dataFieldList);
-    console.log(form);
-    });
-});
-</script>

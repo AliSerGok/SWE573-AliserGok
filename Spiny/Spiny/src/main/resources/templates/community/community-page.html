@@ -8,13 +8,19 @@
     function showDateField1() {
         var postDateDiv = document.getElementById("postDateDiv");
         if (postDateDiv) {
-            postDateDiv.style.display = document.getElementById("searchPosts").checked ? "block" : "none";
+            postDateDiv.style.display = document.getElementById("searchByDate").checked ? "block" : "none";
         }
     }
     function showDateField2() {
         var templates = document.getElementById("templates");
         if (templates) {
             templates.style.display = document.getElementById("searchWithTemplates").checked ? "block" : "none";
+        }
+    }
+    function showDateField3() {
+        var fields = document.getElementById("fields");
+        if (fields) {
+            fields.style.display = document.getElementById("searchWithDataField").checked ? "block" : "none";
         }
     }
   </script>
@@ -57,23 +63,45 @@
       <label for="searchPeople">People</label>
     </div>
     <div>
-      <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" onchange="showDateField1()">
-      <label for="searchPosts">Posts</label>
+      <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" onchange="showDateField()">
+      <label for="searchPosts">Post Title</label>
+    </div>
+    <div>
+      <input type="checkbox" id="searchByDate" th:field="*{searchByDate}" onchange="showDateField1()">
+      <label for="searchByDate">Post Date</label>
     </div>
     <br>
     <div id="postDateDiv" style="display: none;">
-      <label for="postDate">Post Date:</label>
+      <label for="postDate">Post Date From:</label>
       <input type="date" id="postDate" th:field="*{postDate}">
     </div>
     <div>
       <input type="checkbox" id="searchWithTemplates" th:field="*{searchWithTemplates}" onchange="showDateField2()">
-      <label for="searchWithTemplates">According to Templates</label>
+      <label for="searchWithTemplates">According to Template</label>
     </div>
     <div id="templates" style="display: none;">
       <label for="templates">Select a Template</label>
       <select th:field="*{templateId}">
         <option th:each="template : ${community.templates}" th:value="${template.id}" th:text="${template.name}"></option>
       </select>
+    </div>
+    <div>
+      <input type="checkbox" id="searchWithDataField" th:field="*{searchWithDataField}" onchange="showDateField3()">
+      <label for="searchWithDataField">Data Field Content</label>
+    </div>
+    <div id="fields" style="display: none;">
+      <label for="fields">Select a Template</label>
+      <select th:field="*{fieldName}" id="media-type" name="media-type">
+        <option th:value="'text'" th:text="'Text'"></option>
+        <option th:value="'image'" th:text="'Image'"></option>
+        <option th:value="'video'" th:text="'Video'"></option>
+        <option th:value="'geolocation'" th:text="'Geolocation'"></option>
+        <option th:value="'audio'" th:text="'Audio'"></option>
+      </select>
+      <div>
+        <input type="checkbox" id="allFields" th:field="*{allFields}" >
+        <label for="allFields">All fields</label>
+      </div>
     </div>
 
     <br>
@@ -82,6 +110,7 @@
 
   <form action="#"  th:object="${community}" >
 
+    <br>
     Name: <span th:text="${community.name}"></span><br><br>
     Description: <span th:text="${community.description}"></span><br><br>
     <div sec:authorize="hasRole('USER')">
@@ -98,9 +127,10 @@
         <td th:text="${follower.userName}"></td>
         <hr>
     </div>
-     <br>
+    <br>
     <div>
       <h2>Templates:</h2>
+      <a th:href="@{/template/templateForm(communityId=${community.id})}">Create new template</a><br>
       <form action="#" th:object="${community}">
         Default Post Template <a th:href="@{/post/showDefaultPostForm(communityId=${community.id})}">Select</a>
         <table>

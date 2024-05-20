@@ -212,14 +212,16 @@ DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255),
-  `creation_date` DATETIME,
-  `update_date` DATETIME,
+  `creation_date` DATE,
+  `update_date` DATE,
   `like_post` INT,
   `dislike_post` INT,
+  `template_id` INT,
   `community_id` INT,
   `user_id` INT,
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_post_community_id` FOREIGN KEY (`community_id`) REFERENCES `community` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_post_template_id` FOREIGN KEY (`template_id`) REFERENCES `template` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_post_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 

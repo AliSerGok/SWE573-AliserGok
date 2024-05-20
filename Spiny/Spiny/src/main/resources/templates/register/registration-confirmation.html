@@ -7,20 +7,20 @@
 
 <body>
 
-	<h2>User registered successfully!</h2>
+<h2>User Registration Successful!</h2>
 
-	<!-- display first name, last name and email -->
-	<ul>
-		<li th:text="'User name: ' + ${webUser.userName}"></li>
-		<li th:text="'First name: ' + ${webUser.firstName}"></li>
-		<li th:text="'Last name: ' + ${webUser.lastName}"></li>
-		<li th:text="'Email name: ' + ${webUser.email}"></li>
-	</ul>
+<!-- Displaying user information -->
+<ul>
+	<li th:text="'User Name: ' + ${webUser.userName}"></li>
+	<li th:text="'First Name: ' + ${webUser.firstName}"></li>
+	<li th:text="'Last Name: ' + ${webUser.lastName}"></li>
+	<li th:text="'Email: ' + ${webUser.email}"></li>
+</ul>
 
-	<hr>
-	
-	<a th:href="@{/showMyLoginPage}">Login with new user name</a>
-	
+<hr>
+
+<a th:href="@{/showMyLoginPage}">Login with the new username</a>
+
 </body>
 
 </html>

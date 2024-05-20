@@ -1,41 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <title>Geolocation Map Form</title>
-  <style>
-        #map {
-            height: 400px;
-            width: 100%;
+  <meta charset="UTF-8">
+  <title>Community Page</title>
+  <script>
+    function showDateField1() {
+        var postDateDiv = document.getElementById("postDateDiv");
+        if (postDateDiv) {
+            postDateDiv.style.display = document.getElementById("searchPosts").checked ? "block" : "none";
         }
-    </style>
+    }
+    function showDateField2() {
+        var templates = document.getElementById("templates");
+        if (templates) {
+            templates.style.display = document.getElementById("searchPosts").checked ? "block" : "none";
+        }
+    }
+  </script>
 </head>
+
 <body>
-<h2>Geolocation Map Form</h2>
-<div id="map"></div>
-<form id="locationForm">
-  <label for="location">Selected Location:</label><br>
-  <input type="text" id="location" name="location" readonly><br><br>
-  <input type="submit" value="Submit">
-</form>
+<div th:if="${session.user}" >
+  <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
+  <p th:text="'user name: ' + ${session.user.userName}"></p>
+</div>
 
-<script>
-        function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 40.7128, lng: -74.0060}, // New York City default olarak
-                zoom: 12
-            });
+<div th:if="${session.user.userName} == ${community.owner.userName}">
+  <a th:href="@{/community/updateCommunityPage(communityId=${community.id})}">Update Your Community</a>
+</div>
 
-            var marker = new google.maps.Marker({
-                position: {lat: 40.7128, lng: -74.0060},
-                map: map,
-                draggable: true // Kullanıcının konumu sürükleyerek seçmesine izin verir
-            });
+<div>
+  <h2>Search</h2>
+  <form th:action="@{/search/processSearchForm}" th:object="${search}" method="post">
+    <label for="keyword">Keyword:</label>
+    <input type="text" id="keyword" th:field="*{keyword}">
+    <br>
+    <label>Search in:</label>
 
-            google.maps.event.addListener(marker, 'dragend', function(event) {
-                document.getElementById('location').value = event.latLng.lat() + ', ' + event.latLng.lng();
-            });
-        }
-    </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+    <div>
+      <input type="checkbox" id="searchPeople" th:field="*{searchInPeople}" onchange="showDateField()">
+      <label for="searchPeople">People</label>
+    </div>
+    <div>
+      <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" onchange="showDateField1()">
+      <label for="searchPosts">Posts</label>
+    </div>
+    <br>
+    <div id="postDateDiv" style="display: none;">
+      <label for="postDate">Post Date:</label>
+      <input type="date" id="postDate" th:field="*{postDate}">
+    </div>
+    <div>
+      <input type="checkbox" id="searchWithTemplates" th:field="*{searchInPosts}" onchange="showDateField1()">
+      <label for="searchPosts">According to Templates</label>
+      <div id="templates" style="display: none;">
+        <select>
+          <option value="">Select a template</option>
+          <tr th:each="template : ${community.templates}">
+            <option th:value="${template.id}" th:text="${template.name}" th:field="*{search.templateId}"></option>
+          </tr>
+        </select>
+      </div>
+    </div>
+
+    <br>
+    <input type="submit" value="Search">
+  </form>
+
+  <form action="#"  th:object="${community}" >
+
+    Name: <span th:text="${community.name}"></span><br><br>
+    Description: <span th:text="${community.description}"></span><br><br>
+    <div sec:authorize="hasRole('USER')">
+      <a th:href="@{/community/followCommunity(communityId=${community.id})}">Follow</a>
+
+    </div>
+
+    <br>
+    <div>
+      Followers:
+
+      <tr th:each="follower : ${community.followers}">
+
+        <td th:text="${follower.userName}"></td>
+        <hr>
+    </div>
+    <br>
+    <div>
+      <a th:href="@{/template/templateForm(communityId=${community.id})}">Create new template</a><br>
+      Templates:<br>
+      <tr th:each="template : ${community.templates}">
+
+        <td th:text="${template.name}"></td>
+        <a th:href="@{/post/showPostForm(templateId=${template.id})}">Select</a>
+        <hr>
+    </div>
+    <br>
+    <div th:if="${community.posts != null}">
+      <h2>Posts:</h2>
+      <table>
+        <tr th:each="post : ${community.posts}" >
+          <td>
+            <h3><span th:text="${post.title}"></span></h3>
+            <div th:if="${post.user != null}">
+              <p>Posted by: <span th:text="${post.getUser().getUserName()}"></span></p>
+            </div>
+            <ul>
+              <li th:each="tempPost : ${post.dataFields}">
+                <p><strong><span th:text="${tempPost.name}"></span>:</strong> <span th:text="${tempPost.inputValue}"></span></p>
+              </li>
+            </ul>
+            <p>Creation Date: <span th:text="${post.creationDate}"></span></p>
+            <form th:action="@{/post/addLike(postId=${post.id})}" method="post" style="display: inline;">
+              <input type="hidden" name="communityId" th:value="${community.id}">
+              <button type="submit" th:text="'like: ' + ${post.like}"></button>
+            </form>
+            <form th:action="@{/post/addDislike(postId=${post.id})}" method="post" style="display: inline;">
+              <input type="hidden" name="communityId" th:value="${community.id}">
+              <button type="submit" th:text="'dislike: ' + ${post.dislike}"></button>
+            </form>
+            <hr>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+  </form>
+</div>
+
 </body>
 </html>
+
+
+
+
+
+
+

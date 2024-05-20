@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import project.Spiny.dao.SearchDao;
 import project.Spiny.entity.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -37,10 +38,7 @@ public class SearchController {
             List<UserProfile> people=searchDao.getUsersByKeySearch(search);
             model.addAttribute("peopleFound",people);
         }
-        if(search!=null && search.getSearchInPosts()){
-            List<Post> posts=searchDao.getPostsByKeySearch(search);
-            model.addAttribute("postsFound",posts);
-        }
+
 
         return "search/search-results-form";
     }
@@ -51,17 +49,33 @@ public class SearchController {
                                              Model model){
         System.out.println("successes");
         System.out.println(communityId);
+        System.out.println(search.getPostDate());
 
         if(search!=null && search.getSearchInPeople()){
             List<User> people=searchDao.getUsersByKeySearch(search,communityId);
             model.addAttribute("peopleFound",people);
         }
-        if(search!=null && search.getSearchInPosts()){
+        List<Post> posts2=new ArrayList<>();
+        if(search!=null){
             List<Post> posts=searchDao.getPostsByKeySearch(search,communityId);
+
+            if(search.getPostDate()!=null){
+                posts2=searchDao.getPostsByDate(search,communityId);
+                for(Post p: posts2){
+                    if (!posts.contains(p)) {
+                        posts.add(p);
+                    }
+                }
+            }
+
             model.addAttribute("postsFound",posts);
-            System.out.println(posts);
+
+
         }
+
+
         model.addAttribute("communityId",communityId);
+
 
 
         return "search/community-search-results";

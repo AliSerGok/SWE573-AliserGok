@@ -21,110 +21,114 @@
             communityDescription.style.display = document.getElementById("searchCommunities").checked ? "block" : "none";
         }
     }
-  </script>
+    </script>
 </head>
 
 <body>
-<h2>Home Page</h2>
-<hr>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Spiny</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/showProfile}">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <form action="#" th:action="@{/logout}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-outline-primary nav-link">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<div>
+<div class="container mt-4">
+    <h2>Home Page</h2>
+    <hr>
+    <p>
+        <a th:href="@{/community/showAllCommunities}">Show All Communities</a>
+    </p>
 
-    <h2>Search</h2>
-    <form th:action="@{/search/processSearchForm}" th:object="${search}" method="post">
-        <label for="keyword">Keyword:</label>
-        <input type="text" id="keyword" th:field="*{keyword}">
-        <br>
-        <label>Search in:</label>
-        <div>
-            <input type="checkbox" id="searchCommunities" th:field="*{searchInCommunity}" onchange="showDateField()">
-            <label for="searchCommunities">Communities</label>
-            <div id="communityDescription" style="display: none;">
-                <input type="checkbox" id="ComDescription" th:field="*{inDescriptions}" onchange="showDateField()">
-                <label for="ComDescription">in descriptions</label>
+    <div>
+        <h2>Search</h2>
+        <form th:action="@{/search/processSearchForm}" th:object="${search}" method="post">
+            <div class="mb-3">
+                <label for="keyword" class="form-label">Keyword:</label>
+                <input type="text" id="keyword" th:field="*{keyword}" class="form-control">
             </div>
-        </div>
-        <div >
-            <input type="checkbox" id="searchPeople" th:field="*{searchInPeople}" onchange="showDateField()">
-            <label for="searchPeople">People</label>
-        </div>
-        <div style="display: none;">
-            <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" onchange="showDateField1()">
-            <label for="searchPosts">Posts</label>
-        </div>
-        <br>
-        <div id="postDateDiv" style="display: none;">
-            <label for="postDate">Post Date:</label>
-            <input type="date" id="postDate" th:field="*{postDate}">
-        </div>
-        <br>
-        <input type="submit" value="Search">
-    </form>
-</div>
+            <div class="mb-3">
+                <label>Search in:</label>
+                <div class="form-check">
+                    <input type="checkbox" id="searchCommunities" th:field="*{searchInCommunity}" class="form-check-input" onchange="showDateField()">
+                    <label for="searchCommunities" class="form-check-label">Communities</label>
+                </div>
+                <div id="communityDescription" style="display: none;" class="ms-3">
+                    <div class="form-check">
+                        <input type="checkbox" id="ComDescription" th:field="*{inDescriptions}" class="form-check-input" onchange="showDateField()">
+                        <label for="ComDescription" class="form-check-label">in descriptions</label>
+                    </div>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="searchPeople" th:field="*{searchInPeople}" class="form-check-input" onchange="showDateField()">
+                    <label for="searchPeople" class="form-check-label">People</label>
+                </div>
+                <div style="display: none;">
+                    <div class="form-check">
+                        <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" class="form-check-input" onchange="showDateField1()">
+                        <label for="searchPosts" class="form-check-label">Posts</label>
+                    </div>
+                </div>
+            </div>
+            <div id="postDateDiv" style="display: none;" class="mb-3">
+                <label for="postDate" class="form-label">Post Date:</label>
+                <input type="date" id="postDate" th:field="*{postDate}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
 
-<hr>
+    <hr>
+    <p>
+        User: <span sec:authentication="principal.username"></span>
+        <br><br>
+        Role(s): <span sec:authentication="principal.authorities"></span>
+    </p>
 
-<!-- display use name and role(s) -->
-
-<p>
-    User: <span sec:authentication="principal.username"></span>
-    <br><br>
-    Role(s): <span sec:authentication="principal.authorities"></span>
-
-    <!-- display first name, last name and email -->
-    <div th:if="${session.user}" >
+    <div th:if="${session.user}">
         <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName}"></p>
     </div>
-        <a th:href="@{/user/showProfile}">My Profile</a>
-<hr>
-<div>
-    <table class="table table-bordered table-striped">
-
-        <thead class="table-dark">Followed Communities</thead>
-        <br>
-        <hr>
-
-        <thead class="table-dark">
-        <tr>
-            <th>Community Name</th>
-            <th>View</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr th:each="tempCommunity : ${session.user.followedCommunities}">
-
-            <td th:text="${tempCommunity.name}"></td>
-            <td>
-                <a th:href="@{/community/showCommunity(communityId=${tempCommunity.id})}">View</a>
-            </td>
-            <td>
-                <!--
-                <div sec:authorize="hasRole('USER')">
-                  <a th:href="@{/community/delete(communityId=${tempCommunity.id})}"
-                     onclick="if(!(confirm('Are you sure to delete this community'))) return false">Delete</a>
-                </div>-->
-            </td>
-
-
-        </tr>
-        </tbody>
-    </table>
-
+    <hr>
+    <div>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>Community Name</th>
+                <th>View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tempCommunity : ${session.user.followedCommunities}">
+                <td th:text="${tempCommunity.name}"></td>
+                <td>
+                    <a th:href="@{/community/showCommunity(communityId=${tempCommunity.id})}">View</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-
-<form action="#" th:action="@{/logout}"
-      method="POST">
-
-    <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
-
-</form>
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+Kq2D9K9JkzYp6fm6wFZgn0F6M9xg"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
+
 
 <!--
 

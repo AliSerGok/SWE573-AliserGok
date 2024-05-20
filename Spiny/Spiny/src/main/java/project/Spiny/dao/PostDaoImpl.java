@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import project.Spiny.entity.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class PostDaoImpl implements PostDao{
         User user=userDao.findByUserName(userName);
         post.setUser(user);
         post.setDataFields(dataFieldsNew);
-        post.setCreationDate(LocalDateTime.now());
+        post.setCreationDate(LocalDate.now());
 
         entityManager.persist(post);
 
@@ -104,7 +105,7 @@ public class PostDaoImpl implements PostDao{
         User user=userDao.findByUserName(userName);
         post.setUser(user);
         post.setDataFields(dataFieldsNew);
-        post.setCreationDate(LocalDateTime.now());
+        post.setCreationDate(LocalDate.now());
 
         entityManager.persist(post);
     }

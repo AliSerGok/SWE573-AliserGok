@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +47,10 @@ public class Post {
     }
 
     @Column(name = "creation_date")
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
     @Column(name="update_date")
-    private LocalDateTime updateDate;
+    private LocalDate updateDate;
 
     @Column(name = "like_post")
     private int like;
