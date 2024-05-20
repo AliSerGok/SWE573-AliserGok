@@ -12,4 +12,5 @@ public interface PostDao {
     void savePostbyDefaultDatafields(List<DataField> dataFields,int id);
     void addlike(int id);
     void addDislike(int id);
+    List<Post> getPostFormByUserId(int id);
 }

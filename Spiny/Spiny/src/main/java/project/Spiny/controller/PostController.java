@@ -101,16 +101,30 @@ public class PostController {
     }
 
     @PostMapping("/addLike")
-    public String addLike(@RequestParam("postId")int postId,@RequestParam("communityId")int communityId){
-        System.out.println(communityId);
+    public String addLike(@RequestParam("postId")int postId,
+                          @RequestParam(value = "communityId", required = false)Integer communityId1,
+                          @RequestParam(value = "userId", required = false)Integer userId1){
+        if(communityId1!=null){
+            postDao.addlike(postId);
+            int communityId=(int) communityId1;
+            return "redirect:/community/showCommunity?communityId=" + communityId;
+        }
+        int userId=(int) userId1;
         postDao.addlike(postId);
-        return "redirect:/community/showCommunity?communityId=" + communityId;
+        return "redirect:/user/showProfile?userId=" + userId;
     }
 
     @PostMapping("/addDislike")
-    public String addDislike(@RequestParam("postId")int postId,@RequestParam("communityId")int communityId){
-        System.out.println(communityId);
+    public String addDislike(@RequestParam("postId")int postId,
+                             @RequestParam(value = "communityId", required = false)Integer communityId1,
+                             @RequestParam(value = "userId", required = false)Integer userId1){
+        if(communityId1!=null){
+            postDao.addDislike(postId);
+            int communityId=(int) communityId1;
+            return "redirect:/community/showCommunity?communityId=" + communityId;
+        }
+        int userId=(int) userId1;
         postDao.addDislike(postId);
-        return "redirect:/community/showCommunity?communityId=" + communityId;
+        return "redirect:/user/showProfile?userId=" + userId;
     }
 }

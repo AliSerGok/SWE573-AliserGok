@@ -11,9 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import project.Spiny.dao.PostDao;
 import project.Spiny.dao.UserDao;
 import project.Spiny.dao.UserProfileDao;
 import project.Spiny.entity.Community;
+import project.Spiny.entity.Post;
 import project.Spiny.entity.UserProfile;
 
 import java.util.List;
@@ -24,11 +26,13 @@ public class UserController {
 
     private UserProfileDao userProfileDao;
     private UserDao userDao;
+    private PostDao postDao;
 
     @Autowired
-    public UserController(UserProfileDao userProfileDao, UserDao userDao) {
+    public UserController(UserProfileDao userProfileDao, UserDao userDao, PostDao postDao) {
         this.userProfileDao=userProfileDao;
         this.userDao=userDao;
+        this.postDao=postDao;
     }
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
@@ -42,7 +46,9 @@ public class UserController {
        if(id!=null){
            int userId= id;
            UserProfile userProfile=userProfileDao.findUserProfileById(userId);
+           List<Post> posts=postDao.getPostFormByUserId(userId);
            theModel.addAttribute("UserProfile",userProfile);
+           theModel.addAttribute("userPosts",posts);
            return "user/userProfile";
        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,6 +56,10 @@ public class UserController {
 
         UserProfile userProfile=userProfileDao.findUserProfileByUserName(username);
         theModel.addAttribute("UserProfile",userProfile);
+        long id2=userProfile.getUser().getId();
+
+        List<Post> posts=postDao.getPostFormByUserId((int)id2);
+        theModel.addAttribute("userPosts",posts);
         return "user/userProfile";
     }
 

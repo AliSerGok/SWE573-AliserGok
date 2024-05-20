@@ -59,7 +59,7 @@ public class SearchController {
         if(search!=null){
             List<Post> posts=searchDao.getPostsByKeySearch(search,communityId);
 
-            if(search.getPostDate()!=null){
+            if(search.getPostDate()!=null&& search.getSearchByDate()&&search.getPostDate()!=null){
                 posts2=searchDao.getPostsByDate(search,communityId);
                 for(Post p: posts2){
                     if (!posts.contains(p)) {

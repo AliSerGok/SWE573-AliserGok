@@ -1,0 +1,59 @@
+<form th:action="@{/search/processCommunitySearchForm}" th:object="${search}" method="post" class="mt-4">
+    <div class="form-group">
+        <label for="keyword">Keyword:</label>
+        <input type="text" id="keyword" th:field="*{keyword}" class="form-control">
+    </div>
+    <input type="hidden" name="communityId" th:value="${community.id}">
+    <div class="form-group">
+        <label>Search in:</label>
+        <div class="form-check">
+            <input type="checkbox" id="searchPeople" th:field="*{searchInPeople}" onchange="showDateField()" class="form-check-input">
+            <label for="searchPeople" class="form-check-label">People</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" id="searchPosts" th:field="*{searchInPosts}" onchange="showDateField()" class="form-check-input">
+            <label for="searchPosts" class="form-check-label">Post Title</label>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" id="searchByDate" th:field="*{searchByDate}" onchange="showDateField1()" class="form-check-input">
+            <label for="searchByDate" class="form-check-label">Post Date</label>
+        </div>
+        <div id="postDateDiv" style="display: none;">
+            <label for="postDate">Post Date From:</label>
+            <input type="date" id="postDate" th:field="*{postDate}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input type="checkbox" id="searchWithTemplates" th:field="*{searchWithTemplates}" onchange="showDateField2()" class="form-check-input">
+            <label for="searchWithTemplates" class="form-check-label">According to Template</label>
+        </div>
+        <div id="templates" style="display: none;">
+            <label for="templates">Select a Template</label>
+            <select th:field="*{templateId}" class="form-control">
+                <option th:each="template : ${community.templates}" th:value="${template.id}" th:text="${template.name}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input type="checkbox" id="searchWithDataField" th:field="*{searchWithDataField}" onchange="showDateField3()" class="form-check-input">
+            <label for="searchWithDataField" class="form-check-label">Data Field Content</label>
+        </div>
+        <div id="fields" style="display: none;">
+            <label for="fields">Select a Field Type</label>
+            <select th:field="*{fieldName}" id="field-type" name="field-type" class="form-control">
+                <option th:value="'text'" th:text="'Text'"></option>
+                <option th:value="'image'" th:text="'Image'"></option>
+                <option th:value="'video'" th:text="'Video'"></option>
+                <option th:value="'geolocation'" th:text="'Geolocation'"></option>
+                <option th:value="'audio'" th:text="'Audio'"></option>
+            </select>
+            <div class="form-check">
+                <input type="checkbox" id="allFields" th:field="*{allFields}" class="form-check-input">
+                <label for="allFields" class="form-check-label">All fields</label>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>

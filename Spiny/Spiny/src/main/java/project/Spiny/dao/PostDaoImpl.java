@@ -1,6 +1,7 @@
 package project.Spiny.dao;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -124,5 +125,17 @@ public class PostDaoImpl implements PostDao{
         Post post=entityManager.find(Post.class,id);
         post.addDislike();
         entityManager.merge(post);
+    }
+
+    @Override
+    public List<Post> getPostFormByUserId(int id) {
+        List<Post> postsFoundList=new ArrayList<>();
+
+        TypedQuery<Post> theQuery = entityManager.createQuery("SELECT DISTINCT p FROM Post p " +
+                "Join Fetch p.user " +
+                "where p.user.id = :userId", Post.class);
+        theQuery.setParameter("userId", id);
+        postsFoundList = theQuery.getResultList();
+        return postsFoundList;
     }
 }

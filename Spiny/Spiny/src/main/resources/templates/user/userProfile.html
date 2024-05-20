@@ -58,6 +58,40 @@
 
     </form>
 </div>
+<br>
+<div th:if="${session.user.userName} == ${UserProfile.user.userName}">
+<div th:if="${userPosts != null}" >
+    <h2>Posts:</h2>
+    <table>
+        <tr th:each="post : ${userPosts}" >
+            <td>
+                <h3><span th:text="${post.title}"></span></h3>
+                <div th:if="${post.user != null}">
+                    <p>Posted by: <span th:text="${post.getUser().getUserName()}"></span></p>
+                </div>
+                <div th:if="${post.community != null}">
+                    <p>Community: <span th:text="${post.community.name}"></span></p>
+                </div>
+                <ul>
+                    <li th:each="tempPost : ${post.dataFields}">
+                        <p><strong><span th:text="${tempPost.name}"></span>:</strong> <span th:text="${tempPost.inputValue}"></span></p>
+                    </li>
+                </ul>
+                <p>Creation Date: <span th:text="${post.creationDate}"></span></p>
+                <form th:action="@{/post/addLike(postId=${post.id})}" method="post" style="display: inline;">
+                    <input type="hidden" name="userId" th:value="${post.user.id}">
+                    <button type="submit" th:text="'like: ' + ${post.like}"></button>
+                </form>
+                <form th:action="@{/post/addDislike(postId=${post.id})}" method="post" style="display: inline;">
+                    <input type="hidden" name="userId" th:value="${post.user.id}">
+                    <button type="submit" th:text="'dislike: ' + ${post.dislike}"></button>
+                </form>
+                <hr>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
 
 </body>
 </html>
