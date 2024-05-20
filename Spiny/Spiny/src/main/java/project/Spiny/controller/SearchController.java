@@ -55,12 +55,12 @@ public class SearchController {
             List<User> people=searchDao.getUsersByKeySearch(search,communityId);
             model.addAttribute("peopleFound",people);
         }
-        List<Post> posts2=new ArrayList<>();
+
         if(search!=null){
             List<Post> posts=searchDao.getPostsByKeySearch(search,communityId);
 
-            if(search.getPostDate()!=null&& search.getSearchByDate()&&search.getPostDate()!=null){
-                posts2=searchDao.getPostsByDate(search,communityId);
+            if(search.getSearchByDate()&&search.getPostDate()!=null){
+                List<Post> posts2=searchDao.getPostsByDate(search,communityId);
                 for(Post p: posts2){
                     if (!posts.contains(p)) {
                         posts.add(p);
@@ -69,14 +69,8 @@ public class SearchController {
             }
 
             model.addAttribute("postsFound",posts);
-
-
         }
-
-
         model.addAttribute("communityId",communityId);
-
-
 
         return "search/community-search-results";
     }

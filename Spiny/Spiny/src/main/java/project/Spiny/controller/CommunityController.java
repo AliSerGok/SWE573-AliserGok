@@ -82,10 +82,11 @@ public class CommunityController {
     public String updateCommunity(@Valid @ModelAttribute("community") Community theCommunity,Model theModel){
 
         communityDao.update(theCommunity);
-        Community community=communityDao.getCommunityById(theCommunity.getId());
+        int communityId=theCommunity.getId();
+        Community community=communityDao.getCommunityById(communityId);
         if(community!=null){
             theModel.addAttribute("community", community);
-            return "community/community-page";
+            return "redirect:/community/showCommunity?communityId=" + communityId;
         }
         return "exceptions/access-denied";
     }
@@ -97,7 +98,7 @@ public class CommunityController {
 
         Community community=communityDao.getCommunityById(theId);
         theModel.addAttribute("community", community);
-        return "community/community-page";
+        return "redirect:/community/showCommunity?communityId=" + theId;
     }
 
 }

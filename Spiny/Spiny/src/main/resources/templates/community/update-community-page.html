@@ -21,6 +21,10 @@
 <div th:if="${session.user}" >
   <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
 </div>
+<div sec:authorize="hasRole('USER')">
+  <a th:href="@{/}">Home page</a>
+
+</div><br>
 
 </p>
 

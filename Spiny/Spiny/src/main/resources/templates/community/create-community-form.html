@@ -11,6 +11,10 @@
 </head>
 
 <body>
+<div sec:authorize="hasRole('USER')">
+  <a th:href="@{/}">Home page</a>
+
+</div><br>
 
 <p>
   User: <span sec:authentication="principal.username"></span>

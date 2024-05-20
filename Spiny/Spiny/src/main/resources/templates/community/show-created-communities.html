@@ -13,6 +13,10 @@ Authorized name: <span sec:authentication="principal.username"></span><br><br>
 <form action="#" th:action="@{/logout}" method="POST">
   <button type="submit" >Logout</button>
 </form>
+<div sec:authorize="hasRole('USER')">
+  <a th:href="@{/}">Home page</a>
+
+</div><br>
 
 </body>
 
