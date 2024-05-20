@@ -74,8 +74,10 @@ public class CommunityController {
     @PostMapping("/processCommunity")
     public String saveCommunity(@Valid @ModelAttribute("community") Community theCommunity){
 
+
         communityDao.save(theCommunity);
-        return "community/community-page";
+
+        return "redirect:/community/showCreatedCommunities";
     }
 
     @PostMapping("/updateCommunity")
