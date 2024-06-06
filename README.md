@@ -1,4 +1,4 @@
-# Spiny App (a communication information system project)
+# Spiny App (a community information system project)
 
 This repository was created on February 26, 2024 for Bogazici University Software Engineering SWE 573 course. 
 
